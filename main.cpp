@@ -1,5 +1,6 @@
 #include <iostream>
 #include <filesystem>
+#include <string>
 
 #pragma warning(disable:4996);
 
@@ -25,7 +26,17 @@ int main()
     std::cout << "- Current location of executable: " << std::filesystem::current_path() << "\n";
     std::cout << "=======================================" << "\n\n";
 
+    std::string user_input;
+
     std::cout << get_current_date() << "\n";
+    std::cout << "Input: " << "\n";
+    std::cout << "> ";
+    std::getline(std::cin, user_input);
+
+    std::cout << "[!] END" << "\n";
+    std::cout << "[!] Exiting..." << "\n\n";
+    return 0;
+
 }
 
 /*
