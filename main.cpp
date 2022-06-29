@@ -2,6 +2,8 @@
 #include <filesystem>
 #include <string>
 
+#include <wx/wxprec.h>
+
 #pragma warning(disable:4996);
 
 std::string get_current_date()
@@ -38,6 +40,12 @@ int main()
     return 0;
 
 }
+
+class MyApp : public wxApp
+{
+public:
+    virtual bool OnInit();
+};
 
 /*
 Project Plan and Design
