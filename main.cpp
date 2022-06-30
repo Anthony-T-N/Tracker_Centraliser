@@ -2,7 +2,13 @@
 #include <filesystem>
 #include <string>
 
+// $(wxwin)\include\msvc;$(wxwin)\include
+// For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
+
+#ifndef WX_PRECOMP
+#include <wx/wx.h>
+#endif
 
 #pragma warning(disable:4996);
 
