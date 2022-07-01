@@ -2,6 +2,12 @@
 #include <filesystem>
 #include <string>
 
+/* Troubleshoot
+Severity	Code	Description	Project	File	Line	Suppression State
+Error	LNK2019	unresolved external symbol "__declspec(dllimport) public: __cdecl wxString::~wxString(void)" (__imp_??1wxString@@QEAA@XZ) referenced in function "public: void * __cdecl wxString::`vector deleting destructor'(unsigned int)" (??_EwxString@@QEAAPEAXI@Z)	Tracker_Centralisation	C:\Users\Anthony\source\repos\Tracker_Centralisation\Tracker_Centralisation.obj	1
+
+*/
+
 // $(wxwin)\include\msvc;$(wxwin)\include
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
@@ -10,7 +16,7 @@
 #include <wx/wx.h>
 #endif
 
-#pragma warning(disable:4996);
+#pragma warning(disable:4996)
 
 std::string get_current_date()
 {
