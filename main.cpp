@@ -3,8 +3,11 @@
 #include <string>
 
 /* Troubleshoot
+
 Severity	Code	Description	Project	File	Line	Suppression State
-Error	LNK2019	unresolved external symbol "__declspec(dllimport) public: __cdecl wxString::~wxString(void)" (__imp_??1wxString@@QEAA@XZ) referenced in function "public: void * __cdecl wxString::`vector deleting destructor'(unsigned int)" (??_EwxString@@QEAAPEAXI@Z)	Tracker_Centralisation	C:\Users\Anthony\source\repos\Tracker_Centralisation\Tracker_Centralisation.obj	1
+Error	LNK2019	unresolved external symbol main referenced in function "int __cdecl invoke_main(void)" (?invoke_main@@YAHXZ)	Tracker_Centralisation	C:\Users\Anthony\source\repos\Tracker_Centralisation\MSVCRTD.lib(exe_main.obj)	1
+
+Configuration->Linker->System->Subsystem property to Windows (/SUBSYSTEM:WINDOWS).
 
 */
 
@@ -52,12 +55,6 @@ int main()
     return 0;
 
 }
-
-class MyApp : public wxApp
-{
-public:
-    virtual bool OnInit();
-};
 
 /*
 Project Plan and Design
