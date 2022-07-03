@@ -14,9 +14,9 @@ Configuration->Linker->System->Subsystem property to Windows (/SUBSYSTEM:WINDOWS
 // $(wxwin)\include\msvc;$(wxwin)\include
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
-
+ 
 #ifndef WX_PRECOMP
-#include <wx/wx.h>
+    #include <wx/wx.h>
 #endif
 
 #pragma warning(disable:4996)
@@ -33,7 +33,7 @@ std::string get_current_date()
     strftime(buffer, sizeof(buffer), "%Y-%m-%d", timeinfo);
     return buffer;
 }
-
+/*
 int main()
 {
     std::cout << "=======================================" << "\n";
@@ -55,6 +55,7 @@ int main()
     return 0;
 
 }
+*/
 
 /*
 Project Plan and Design
@@ -70,3 +71,94 @@ Brief : Centralise tracking of a number of activities.
 [-] Optimized to be lightweight and run in the background.
 
 */
+
+class MyApp : public wxApp
+{
+public:
+    virtual bool OnInit();
+};
+
+class MyFrame : public wxFrame
+{
+public:
+    MyFrame();
+
+private:
+    void OnHello(wxCommandEvent& event);
+    void OnTest(wxCommandEvent& event);
+    void OnExit(wxCommandEvent& event);
+    void OnAbout(wxCommandEvent& event);
+};
+
+enum
+{
+    ID_Hello = 1
+};
+
+enum
+{
+    ID_Test = 2
+};
+// const int ID_Test = 2;
+
+wxIMPLEMENT_APP(MyApp);
+
+bool MyApp::OnInit()
+{
+    MyFrame* frame = new MyFrame();
+    frame->Show(true);
+    return true;
+}
+
+MyFrame::MyFrame()
+    : wxFrame(NULL, wxID_ANY, "Window_Title_Bar")
+{
+    wxMenu* menuFile = new wxMenu;
+    menuFile->Append(ID_Hello, "&Main_Item...\tCtrl-H",
+        "String shown in bottom status bar");
+    menuFile->AppendSeparator();
+    menuFile->Append(wxID_EXIT);
+
+    wxMenu* menuFile_T = new wxMenu;
+    menuFile_T->Append(ID_Test, "&Test_Item...\tCtrl-H",
+        "Test Status Bar Item");
+
+    wxMenu* menuHelp = new wxMenu;
+    menuHelp->Append(wxID_ABOUT);
+
+    wxMenuBar* menuBar = new wxMenuBar;
+    menuBar->Append(menuFile, "&Tab_1");
+    menuBar->Append(menuFile_T, "&Test_Tab");
+    menuBar->Append(menuHelp, "&Tab_2");
+
+    SetMenuBar(menuBar);
+
+    CreateStatusBar();
+    SetStatusText("Bottom_Status_Bar");
+
+    Bind(wxEVT_MENU, &MyFrame::OnHello, this, ID_Hello);
+    Bind(wxEVT_MENU, &MyFrame::OnTest, this, ID_Test);
+    Bind(wxEVT_MENU, &MyFrame::OnAbout, this, wxID_ABOUT);
+    Bind(wxEVT_MENU, &MyFrame::OnExit, this, wxID_EXIT);
+}
+
+void MyFrame::OnAbout(wxCommandEvent& event)
+{
+    wxMessageBox("About Message Here",
+        "About Window Title Bar", wxOK | wxICON_INFORMATION);
+}
+
+void MyFrame::OnHello(wxCommandEvent& event)
+{
+    wxLogMessage("Tab_1 Window Message");
+}
+
+void MyFrame::OnTest(wxCommandEvent& event)
+{
+    wxLogMessage("Test Window Message");
+}
+
+void MyFrame::OnExit(wxCommandEvent& event)
+{
+    Close(true);
+}
