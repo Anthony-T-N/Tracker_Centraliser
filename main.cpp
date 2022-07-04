@@ -72,16 +72,17 @@ Brief : Centralise tracking of a number of activities.
 
 */
 
-class MyApp : public wxApp
+class Main_Application : public wxApp
 {
 public:
     virtual bool OnInit();
 };
 
-class MyFrame : public wxFrame
+class Main_Frame : public wxFrame
 {
 public:
-    MyFrame();
+    Main_Frame();
+    wxTextCtrl* MainEditBox;
 
 private:
     void OnHello(wxCommandEvent& event);
@@ -92,25 +93,22 @@ private:
 
 enum
 {
-    ID_Hello = 1
+    ID_Hello = 1,
+    TEXT_Main = wxID_HIGHEST + 1
 };
 
-enum
-{
-    ID_Test = 2
-};
-// const int ID_Test = 2;
+const int ID_Test = 2;
 
-wxIMPLEMENT_APP(MyApp);
+wxIMPLEMENT_APP(Main_Application);
 
-bool MyApp::OnInit()
+bool Main_Application::OnInit()
 {
-    MyFrame* frame = new MyFrame();
+    Main_Frame* frame = new Main_Frame();
     frame->Show(true);
     return true;
 }
 
-MyFrame::MyFrame()
+Main_Frame::Main_Frame()
     : wxFrame(NULL, wxID_ANY, "Window_Title_Bar")
 {
     wxMenu* menuFile = new wxMenu;
@@ -119,46 +117,51 @@ MyFrame::MyFrame()
     menuFile->AppendSeparator();
     menuFile->Append(wxID_EXIT);
 
+    wxMenu* menuHelp = new wxMenu;
+    menuHelp->Append(wxID_ABOUT);
+
     wxMenu* menuFile_T = new wxMenu;
     menuFile_T->Append(ID_Test, "&Test_Item...\tCtrl-H",
         "Test Status Bar Item");
 
-    wxMenu* menuHelp = new wxMenu;
-    menuHelp->Append(wxID_ABOUT);
-
     wxMenuBar* menuBar = new wxMenuBar;
     menuBar->Append(menuFile, "&Tab_1");
-    menuBar->Append(menuFile_T, "&Test_Tab");
     menuBar->Append(menuHelp, "&Tab_2");
+    menuBar->Append(menuFile_T, "&Test_Tab");
 
     SetMenuBar(menuBar);
 
     CreateStatusBar();
     SetStatusText("Bottom_Status_Bar");
 
-    Bind(wxEVT_MENU, &MyFrame::OnHello, this, ID_Hello);
-    Bind(wxEVT_MENU, &MyFrame::OnTest, this, ID_Test);
-    Bind(wxEVT_MENU, &MyFrame::OnAbout, this, wxID_ABOUT);
-    Bind(wxEVT_MENU, &MyFrame::OnExit, this, wxID_EXIT);
+    MainEditBox = new wxTextCtrl(this, TEXT_Main,
+        wxT("Hi!"), wxDefaultPosition, wxDefaultSize,
+        wxTE_MULTILINE | wxTE_RICH, wxDefaultValidator, wxTextCtrlNameStr);
+    Maximize();
+
+    Bind(wxEVT_MENU, &Main_Frame::OnHello, this, ID_Hello);
+    Bind(wxEVT_MENU, &Main_Frame::OnTest, this, ID_Test);
+    Bind(wxEVT_MENU, &Main_Frame::OnAbout, this, wxID_ABOUT);
+    Bind(wxEVT_MENU, &Main_Frame::OnExit, this, wxID_EXIT);
 }
 
-void MyFrame::OnAbout(wxCommandEvent& event)
+void Main_Frame::OnAbout(wxCommandEvent& event)
 {
     wxMessageBox("About Message Here",
         "About Window Title Bar", wxOK | wxICON_INFORMATION);
 }
 
-void MyFrame::OnHello(wxCommandEvent& event)
+void Main_Frame::OnHello(wxCommandEvent& event)
 {
     wxLogMessage("Tab_1 Window Message");
 }
 
-void MyFrame::OnTest(wxCommandEvent& event)
+void Main_Frame::OnTest(wxCommandEvent& event)
 {
     wxLogMessage("Test Window Message");
 }
 
-void MyFrame::OnExit(wxCommandEvent& event)
+void Main_Frame::OnExit(wxCommandEvent& event)
 {
     Close(true);
 }
