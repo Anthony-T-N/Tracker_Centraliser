@@ -98,6 +98,7 @@ enum
 };
 
 const int ID_Test = 2;
+const int ID_Dynamic = 3;
 
 wxIMPLEMENT_APP(Main_Application);
 
@@ -135,7 +136,7 @@ Main_Frame::Main_Frame()
     SetStatusText("Bottom_Status_Bar");
 
     MainEditBox = new wxTextCtrl(this, TEXT_Main,
-        wxT("Hi!"), wxDefaultPosition, wxDefaultSize,
+        wxT("Enter text here..."), wxDefaultPosition, wxDefaultSize,
         wxTE_MULTILINE | wxTE_RICH, wxDefaultValidator, wxTextCtrlNameStr);
     Maximize();
 
@@ -158,7 +159,9 @@ void Main_Frame::OnHello(wxCommandEvent& event)
 
 void Main_Frame::OnTest(wxCommandEvent& event)
 {
-    wxLogMessage("Test Window Message");
+    // get_current_date()
+    std::string test = "12345";
+    wxLogMessage(test);
 }
 
 void Main_Frame::OnExit(wxCommandEvent& event)
