@@ -69,6 +69,7 @@ Brief : Centralise tracking of a number of activities.
 [-] Entered text recorded in csv file.
 [-] Seperate buttons open seperate windows and accept different types of records.
 [-] Optimized to be lightweight and run in the background.
+[-] Fixed minimum window size.
 
 */
 
@@ -88,7 +89,7 @@ private:
     void OnHello(wxCommandEvent& event);
     void OnTest(wxCommandEvent& event);
     void OnExit(wxCommandEvent& event);
-    void OnAbout(wxCommandEvent& event);
+    void OnExercise(wxCommandEvent& event);
 };
 
 enum
@@ -118,8 +119,8 @@ Main_Frame::Main_Frame()
     menuFile->AppendSeparator();
     menuFile->Append(wxID_EXIT);
 
-    wxMenu* menuHelp = new wxMenu;
-    menuHelp->Append(wxID_ABOUT);
+    wxMenu* menuExercise = new wxMenu;
+    menuExercise->Append(wxID_ABOUT);
 
     wxMenu* menuFile_T = new wxMenu;
     menuFile_T->Append(ID_Test, "&Test_Item...\tCtrl-H",
@@ -127,7 +128,7 @@ Main_Frame::Main_Frame()
 
     wxMenuBar* menuBar = new wxMenuBar;
     menuBar->Append(menuFile, "&Tab_1");
-    menuBar->Append(menuHelp, "&Tab_2");
+    menuBar->Append(menuExercise, "&Exercise");
     menuBar->Append(menuFile_T, "&Test_Tab");
 
     SetMenuBar(menuBar);
@@ -142,14 +143,14 @@ Main_Frame::Main_Frame()
 
     Bind(wxEVT_MENU, &Main_Frame::OnHello, this, ID_Hello);
     Bind(wxEVT_MENU, &Main_Frame::OnTest, this, ID_Test);
-    Bind(wxEVT_MENU, &Main_Frame::OnAbout, this, wxID_ABOUT);
+    Bind(wxEVT_MENU, &Main_Frame::OnExercise, this, wxID_ABOUT);
     Bind(wxEVT_MENU, &Main_Frame::OnExit, this, wxID_EXIT);
 }
 
-void Main_Frame::OnAbout(wxCommandEvent& event)
+void Main_Frame::OnExercise(wxCommandEvent& event)
 {
-    wxMessageBox("About Message Here",
-        "About Window Title Bar", wxOK | wxICON_INFORMATION);
+    wxMessageBox("This is the Exercise tab",
+        "Exercise Tab", wxOK | wxICON_INFORMATION);
 }
 
 void Main_Frame::OnHello(wxCommandEvent& event)
@@ -159,9 +160,7 @@ void Main_Frame::OnHello(wxCommandEvent& event)
 
 void Main_Frame::OnTest(wxCommandEvent& event)
 {
-    // get_current_date()
-    std::string test = "12345";
-    wxLogMessage(test);
+    wxMessageBox(get_current_date());
 }
 
 void Main_Frame::OnExit(wxCommandEvent& event)
