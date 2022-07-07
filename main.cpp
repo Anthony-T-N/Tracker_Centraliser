@@ -81,15 +81,16 @@ public:
 
 class Main_Frame : public wxFrame
 {
-public:
-    Main_Frame();
-    wxTextCtrl* MainEditBox;
+    public:
+        Main_Frame();
+        wxTextCtrl* MainEditBox;
 
-private:
-    void OnHello(wxCommandEvent& event);
-    void OnTest(wxCommandEvent& event);
-    void OnExit(wxCommandEvent& event);
-    void OnExercise(wxCommandEvent& event);
+    private:
+        void OnHello(wxCommandEvent& event);
+        void OnMedia(wxCommandEvent& event);
+        void OnExit(wxCommandEvent& event);
+        void OnExercise(wxCommandEvent& event);
+        void OnBookmark(wxCommandEvent& event);
 };
 
 enum
@@ -98,8 +99,8 @@ enum
     TEXT_Main = wxID_HIGHEST + 1
 };
 
-const int ID_Test = 2;
-const int ID_Dynamic = 3;
+const int ID_Media = 2;
+const int ID_Bookmark = 3;
 
 wxIMPLEMENT_APP(Main_Application);
 
@@ -123,28 +124,42 @@ Main_Frame::Main_Frame()
     menuExercise->Append(wxID_ABOUT);
 
     wxMenu* menuFile_T = new wxMenu;
-    menuFile_T->Append(ID_Test, "&Test_Item...\tCtrl-H",
-        "Test Status Bar Item");
+    menuFile_T->Append(ID_Media, "&Time_Record\tCtrl-H",
+        "Bar: Record time");
+
+    wxMenu* menu_bookmark = new wxMenu;
+    menu_bookmark->Append(ID_Bookmark, "&Bookmark\tCtrl-H",
+        "Bar: Bookmark");
 
     wxMenuBar* menuBar = new wxMenuBar;
     menuBar->Append(menuFile, "&Tab_1");
     menuBar->Append(menuExercise, "&Exercise");
-    menuBar->Append(menuFile_T, "&Test_Tab");
+    menuBar->Append(menuFile_T, "&Media");
+    menuBar->Append(menu_bookmark, "&Bookmark");
 
     SetMenuBar(menuBar);
 
     CreateStatusBar();
-    SetStatusText("Bottom_Status_Bar");
+    // "Bottom_Status_Bar"
+    SetStatusText(get_current_date());
 
     MainEditBox = new wxTextCtrl(this, TEXT_Main,
         wxT("Enter text here..."), wxDefaultPosition, wxDefaultSize,
         wxTE_MULTILINE | wxTE_RICH, wxDefaultValidator, wxTextCtrlNameStr);
+
     Maximize();
 
     Bind(wxEVT_MENU, &Main_Frame::OnHello, this, ID_Hello);
-    Bind(wxEVT_MENU, &Main_Frame::OnTest, this, ID_Test);
+    Bind(wxEVT_MENU, &Main_Frame::OnMedia, this, ID_Media);
     Bind(wxEVT_MENU, &Main_Frame::OnExercise, this, wxID_ABOUT);
     Bind(wxEVT_MENU, &Main_Frame::OnExit, this, wxID_EXIT);
+    Bind(wxEVT_MENU, &Main_Frame::OnBookmark, this, ID_Bookmark);
+}
+
+void Main_Frame::OnBookmark(wxCommandEvent& event)
+{
+    wxMessageBox("This is the Bookmark tab",
+        "Bookmark Tab", wxOK | wxICON_INFORMATION);
 }
 
 void Main_Frame::OnExercise(wxCommandEvent& event)
@@ -158,7 +173,7 @@ void Main_Frame::OnHello(wxCommandEvent& event)
     wxLogMessage("Tab_1 Window Message");
 }
 
-void Main_Frame::OnTest(wxCommandEvent& event)
+void Main_Frame::OnMedia(wxCommandEvent& event)
 {
     wxMessageBox(get_current_date());
 }
