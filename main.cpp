@@ -175,7 +175,10 @@ void Main_Frame::OnHello(wxCommandEvent& event)
 
 void Main_Frame::OnMedia(wxCommandEvent& event)
 {
-    wxMessageBox(get_current_date());
+    //wxMessageBox(get_current_date());
+    wxMessageDialog* dial = new wxMessageDialog(NULL,
+        wxT("Message here"), wxT("Info"), wxOK);
+    dial->ShowModal();
 }
 
 void Main_Frame::OnExit(wxCommandEvent& event)
