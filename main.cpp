@@ -1,6 +1,8 @@
 #include <iostream>
 #include <filesystem>
 #include <string>
+#include "Tracker_Centralisation.h"
+#include "flexgridsizer.h"
 
 /* Troubleshoot
 
@@ -84,6 +86,7 @@ class Main_Frame : public wxFrame
     public:
         Main_Frame();
         wxTextCtrl* MainEditBox;
+        wxButton* HelloWorld;
 
     private:
         void OnHello(wxCommandEvent& event);
@@ -96,7 +99,8 @@ class Main_Frame : public wxFrame
 enum
 {
     ID_Hello = 1,
-    TEXT_Main = wxID_HIGHEST + 1
+    TEXT_Main = wxID_HIGHEST + 1,
+    BUTTON_Hello = wxID_HIGHEST + 1
 };
 
 const int ID_Media = 2;
@@ -106,14 +110,22 @@ wxIMPLEMENT_APP(Main_Application);
 
 bool Main_Application::OnInit()
 {
-    Main_Frame* frame = new Main_Frame();
-    frame->Show(true);
+    FlexGridSizer* fgs = new FlexGridSizer(wxT("FlexGridSizer"));
+    // Create an instance of frame or window
+    //Main_Frame* frame = new Main_Frame();
+    // Show the window
+    fgs->Show(true);
+    
     return true;
 }
 
 Main_Frame::Main_Frame()
     : wxFrame(NULL, wxID_ANY, "Window_Title_Bar")
 {
+    HelloWorld = new wxButton(this, BUTTON_Hello, _T("Hello World"),
+        // shows a button on this window
+        wxDefaultPosition, wxDefaultSize, wxBU_LEFT); // with the text "hello World"
+
     wxMenu* menuFile = new wxMenu;
     menuFile->Append(ID_Hello, "&Main_Item...\tCtrl-H",
         "String shown in bottom status bar");
@@ -147,7 +159,8 @@ Main_Frame::Main_Frame()
         wxT("Enter text here..."), wxDefaultPosition, wxDefaultSize,
         wxTE_MULTILINE | wxTE_RICH, wxDefaultValidator, wxTextCtrlNameStr);
 
-    Maximize();
+    // Maximises window.
+    //Maximize();
 
     Bind(wxEVT_MENU, &Main_Frame::OnHello, this, ID_Hello);
     Bind(wxEVT_MENU, &Main_Frame::OnMedia, this, ID_Media);
@@ -156,21 +169,10 @@ Main_Frame::Main_Frame()
     Bind(wxEVT_MENU, &Main_Frame::OnBookmark, this, ID_Bookmark);
 }
 
-void Main_Frame::OnBookmark(wxCommandEvent& event)
-{
-    wxMessageBox("This is the Bookmark tab",
-        "Bookmark Tab", wxOK | wxICON_INFORMATION);
-}
-
 void Main_Frame::OnExercise(wxCommandEvent& event)
 {
     wxMessageBox("This is the Exercise tab",
         "Exercise Tab", wxOK | wxICON_INFORMATION);
-}
-
-void Main_Frame::OnHello(wxCommandEvent& event)
-{
-    wxLogMessage("Tab_1 Window Message");
 }
 
 void Main_Frame::OnMedia(wxCommandEvent& event)
@@ -179,6 +181,17 @@ void Main_Frame::OnMedia(wxCommandEvent& event)
     wxMessageDialog* dial = new wxMessageDialog(NULL,
         wxT("Message here"), wxT("Info"), wxOK);
     dial->ShowModal();
+}
+
+void Main_Frame::OnBookmark(wxCommandEvent& event)
+{
+    wxMessageBox("This is the Bookmark tab",
+        "Bookmark Tab", wxOK | wxICON_INFORMATION);
+}
+
+void Main_Frame::OnHello(wxCommandEvent& event)
+{
+    wxLogMessage("Tab_1 Window Message");
 }
 
 void Main_Frame::OnExit(wxCommandEvent& event)
