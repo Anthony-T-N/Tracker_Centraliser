@@ -1,8 +1,6 @@
 #include <iostream>
 #include <filesystem>
 #include <string>
-#include "Tracker_Centralisation.h"
-#include "flexgridsizer.h"
 
 /* Troubleshoot
 
@@ -35,6 +33,110 @@ std::string get_current_date()
     strftime(buffer, sizeof(buffer), "%Y-%m-%d", timeinfo);
     return buffer;
 }
+
+class Main_Application : public wxApp
+{
+public:
+    virtual bool OnInit();
+};
+
+class Main_Frame : public wxFrame
+{
+    public:
+        Main_Frame();
+        wxTextCtrl* MainEditBox;
+
+    private:
+        void OnHello(wxCommandEvent& event);
+        void OnMedia(wxCommandEvent& event);
+        void OnExit(wxCommandEvent& event);
+        void OnExercise(wxCommandEvent& event);
+        void OnBookmark(wxCommandEvent& event);
+};
+
+enum
+{
+    ID_Hello = 1,
+    TEXT_Main = wxID_HIGHEST + 1,
+    BUTTON_Hello = wxID_HIGHEST + 1
+};
+
+const int ID_Media = 2;
+const int ID_Bookmark = 3;
+const int ID_COMBOBOX1 = 4;
+
+wxIMPLEMENT_APP(Main_Application);
+
+bool Main_Application::OnInit()
+{
+    Main_Frame* fgs = new Main_Frame();
+    // Create an instance of frame or window
+    //Main_Frame* frame = new Main_Frame();
+    // Show the window
+    fgs->Show(true);
+    
+    return true;
+}
+
+Main_Frame::Main_Frame()
+    : wxFrame(NULL, wxID_ANY, "Window_Title_Bar", wxPoint(50, 50), wxSize(250, 250))
+{
+    wxPanel* panel = new wxPanel(this, -1);
+
+    panel->SetBackgroundColour(wxColour(*wxLIGHT_GREY));
+
+    wxBoxSizer* hbox = new wxBoxSizer(wxHORIZONTAL);
+
+    // wxFlexGridSizer(int rows, int cols, int vgap, int hgap)
+    wxFlexGridSizer* fgs = new wxFlexGridSizer(4, 2, 9, 25);
+
+    //SetMinSize(GetBestSize());
+
+    wxArrayString m_arrItems;
+
+    // Create common wxArrayString array
+    m_arrItems.Add(wxT("Exercise_"));
+    m_arrItems.Add(wxT("Time_"));
+    m_arrItems.Add(wxT("Bookmark_"));
+    m_arrItems.Add(wxT("Media_"));
+
+    wxStaticText* date_label = new wxStaticText(panel, -1, wxT("Current_Date:"));
+    wxStaticText* category_label = new wxStaticText(panel, -1, wxT("Category:"));
+    wxStaticText* record_label = new wxStaticText(panel, -1, wxT("Record:"));
+    wxStaticText* review_label = new wxStaticText(panel, -1, wxT("Review:"));
+
+    wxTextCtrl* text_field_0 = new wxTextCtrl(panel, -1, get_current_date());
+    //wxTextCtrl* text_field_1 = new wxTextCtrl(panel, -1);
+    wxComboBox* category_combo_box = new wxComboBox(panel, ID_COMBOBOX1, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_arrItems, wxCB_READONLY, wxDefaultValidator, _T("ID_COMBOBOX1"));
+    wxTextCtrl* text_field_2 = new wxTextCtrl(panel, -1, wxT(""),
+        wxPoint(-1, -1), wxSize(-1, -1), wxTE_MULTILINE);
+
+    wxButton* insert_button = new wxButton(panel, BUTTON_Hello, _T("INSERT"),
+        // shows a button on this window
+        wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_VERTICAL);
+
+    fgs->Add(date_label);
+    fgs->Add(text_field_0, 1, wxEXPAND);
+    fgs->Add(category_label);
+    fgs->Add(category_combo_box);
+    //fgs->Add(text_field_1, 1, wxEXPAND);
+    fgs->Add(record_label);
+    fgs->Add(text_field_2, 1, wxEXPAND);
+    fgs->Add(review_label, 1, wxEXPAND);
+    fgs->Add(insert_button);
+
+    fgs->AddGrowableRow(2, 1);
+    fgs->AddGrowableCol(1, 1);
+
+    hbox->Add(fgs, 1, wxALL | wxEXPAND, 15);
+    panel->SetSizer(hbox);
+    Centre();
+
+    CreateStatusBar();
+    // "Bottom_Status_Bar"
+    SetStatusText("Current path: " + std::filesystem::current_path().generic_string());
+}
+
 /*
 int main()
 {
@@ -60,65 +162,6 @@ int main()
 */
 
 /*
-Project Plan and Design
-
-Brief : Centralise tracking of a number of activities.
-
-[Version 1]
-
-=== Minimum Functions ===
-[-] Window that associate entered text/string with a time/date.
-[-] Entered text recorded in csv file.
-[-] Seperate buttons open seperate windows and accept different types of records.
-[-] Optimized to be lightweight and run in the background.
-[-] Fixed minimum window size.
-
-*/
-
-class Main_Application : public wxApp
-{
-public:
-    virtual bool OnInit();
-};
-
-class Main_Frame : public wxFrame
-{
-    public:
-        Main_Frame();
-        wxTextCtrl* MainEditBox;
-        wxButton* HelloWorld;
-
-    private:
-        void OnHello(wxCommandEvent& event);
-        void OnMedia(wxCommandEvent& event);
-        void OnExit(wxCommandEvent& event);
-        void OnExercise(wxCommandEvent& event);
-        void OnBookmark(wxCommandEvent& event);
-};
-
-enum
-{
-    ID_Hello = 1,
-    TEXT_Main = wxID_HIGHEST + 1,
-    BUTTON_Hello = wxID_HIGHEST + 1
-};
-
-const int ID_Media = 2;
-const int ID_Bookmark = 3;
-
-wxIMPLEMENT_APP(Main_Application);
-
-bool Main_Application::OnInit()
-{
-    FlexGridSizer* fgs = new FlexGridSizer(wxT("FlexGridSizer"));
-    // Create an instance of frame or window
-    //Main_Frame* frame = new Main_Frame();
-    // Show the window
-    fgs->Show(true);
-    
-    return true;
-}
-
 Main_Frame::Main_Frame()
     : wxFrame(NULL, wxID_ANY, "Window_Title_Bar")
 {
@@ -198,3 +241,21 @@ void Main_Frame::OnExit(wxCommandEvent& event)
 {
     Close(true);
 }
+*/
+
+/*
+Project Plan and Design
+
+Brief : Centralise tracking of a number of activities.
+
+[Version 1]
+
+=== Minimum Functions ===
+[-] Window that associate entered text/string with a time/date.
+[-] Entered text recorded in csv file.
+[-] Seperate buttons open seperate windows and accept different types of records.
+[-] Optimized to be lightweight and run in the background.
+[-] Fixed minimum window size ^ Maximum size
+[-] Dark background + White Text
+
+*/
