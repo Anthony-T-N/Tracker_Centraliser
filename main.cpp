@@ -79,11 +79,11 @@ bool Main_Application::OnInit()
 }
 
 Main_Frame::Main_Frame()
-    : wxFrame(NULL, wxID_ANY, "Window_Title_Bar", wxPoint(50, 50), wxSize(250, 250))
+    : wxFrame(NULL, wxID_ANY, "Tracker_Centralizer", wxPoint(50, 50), wxSize(250, 250))
 {
     wxPanel* panel = new wxPanel(this, -1);
 
-    panel->SetBackgroundColour(wxColour(*wxLIGHT_GREY));
+    panel->SetBackgroundColour(wxColour(34, 48, 60));
 
     wxBoxSizer* hbox = new wxBoxSizer(wxHORIZONTAL);
 
@@ -101,9 +101,13 @@ Main_Frame::Main_Frame()
     m_arrItems.Add(wxT("Media_"));
 
     wxStaticText* date_label = new wxStaticText(panel, -1, wxT("Current_Date:"));
+    date_label->SetForegroundColour(wxColour(255,255,255));
     wxStaticText* category_label = new wxStaticText(panel, -1, wxT("Category:"));
+    category_label->SetForegroundColour(wxColour(255, 255, 255));
     wxStaticText* record_label = new wxStaticText(panel, -1, wxT("Record:"));
+    record_label->SetForegroundColour(wxColour(255, 255, 255));
     wxStaticText* review_label = new wxStaticText(panel, -1, wxT("Review:"));
+    review_label->SetForegroundColour(wxColour(255, 255, 255));
 
     wxTextCtrl* text_field_0 = new wxTextCtrl(panel, -1, get_current_date());
     //wxTextCtrl* text_field_1 = new wxTextCtrl(panel, -1);
