@@ -47,7 +47,7 @@ class Main_Frame : public wxFrame
         wxTextCtrl* MainEditBox;
 
     private:
-        void OnHello(wxCommandEvent& event);
+        void OnInsert(wxCommandEvent& event);
         void OnMedia(wxCommandEvent& event);
         void OnExit(wxCommandEvent& event);
         void OnExercise(wxCommandEvent& event);
@@ -58,7 +58,7 @@ enum
 {
     ID_Hello = 1,
     TEXT_Main = wxID_HIGHEST + 1,
-    BUTTON_Hello = wxID_HIGHEST + 1
+    BUTTON_Insert = wxID_HIGHEST + 1
 };
 
 const int ID_Media = 2;
@@ -115,7 +115,7 @@ Main_Frame::Main_Frame()
     wxTextCtrl* text_field_2 = new wxTextCtrl(panel, -1, wxT(""),
         wxPoint(-1, -1), wxSize(-1, -1), wxTE_MULTILINE);
 
-    wxButton* insert_button = new wxButton(panel, BUTTON_Hello, _T("INSERT"),
+    wxButton* insert_button = new wxButton(panel, BUTTON_Insert, _T("INSERT"),
         // shows a button on this window
         wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_VERTICAL);
 
@@ -129,6 +129,8 @@ Main_Frame::Main_Frame()
     fgs->Add(review_label, 1, wxEXPAND);
     fgs->Add(insert_button);
 
+    Bind(wxEVT_BUTTON, &Main_Frame::OnInsert, this, BUTTON_Insert);
+
     fgs->AddGrowableRow(2, 1);
     fgs->AddGrowableCol(1, 1);
 
@@ -139,6 +141,12 @@ Main_Frame::Main_Frame()
     CreateStatusBar();
     // "Bottom_Status_Bar"
     SetStatusText("Current path: " + std::filesystem::current_path().generic_string());
+}
+
+void Main_Frame::OnInsert(wxCommandEvent& event)
+{
+    wxLogMessage("Tab_1 Window Message");
+    category_label->SetLabel("new value");
 }
 
 /*
