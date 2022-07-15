@@ -65,6 +65,12 @@ const int ID_Media = 2;
 const int ID_Bookmark = 3;
 const int ID_COMBOBOX1 = 4;
 
+wxStaticText* category_label;
+
+wxComboBox* category_combo_box;
+
+wxTextCtrl* text_field_2;
+
 wxIMPLEMENT_APP(Main_Application);
 
 bool Main_Application::OnInit()
@@ -102,7 +108,7 @@ Main_Frame::Main_Frame()
 
     wxStaticText* date_label = new wxStaticText(panel, -1, wxT("Current_Date:"));
     date_label->SetForegroundColour(wxColour(255,255,255));
-    wxStaticText* category_label = new wxStaticText(panel, -1, wxT("Category:"));
+    category_label = new wxStaticText(panel, -1, wxT("Category:"));
     category_label->SetForegroundColour(wxColour(255, 255, 255));
     wxStaticText* record_label = new wxStaticText(panel, -1, wxT("Record:"));
     record_label->SetForegroundColour(wxColour(255, 255, 255));
@@ -111,12 +117,11 @@ Main_Frame::Main_Frame()
 
     wxTextCtrl* text_field_0 = new wxTextCtrl(panel, -1, get_current_date());
     //wxTextCtrl* text_field_1 = new wxTextCtrl(panel, -1);
-    wxComboBox* category_combo_box = new wxComboBox(panel, ID_COMBOBOX1, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_arrItems, wxCB_READONLY, wxDefaultValidator, _T("ID_COMBOBOX1"));
-    wxTextCtrl* text_field_2 = new wxTextCtrl(panel, -1, wxT(""),
+    category_combo_box = new wxComboBox(panel, ID_COMBOBOX1, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_arrItems, wxCB_READONLY, wxDefaultValidator, _T("ID_COMBOBOX1"));
+    text_field_2 = new wxTextCtrl(panel, -1, wxT(""),
         wxPoint(-1, -1), wxSize(-1, -1), wxTE_MULTILINE);
 
     wxButton* insert_button = new wxButton(panel, BUTTON_Insert, _T("INSERT"),
-        // shows a button on this window
         wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_VERTICAL);
 
     fgs->Add(date_label);
@@ -145,8 +150,9 @@ Main_Frame::Main_Frame()
 
 void Main_Frame::OnInsert(wxCommandEvent& event)
 {
-    wxLogMessage("Tab_1 Window Message");
-    category_label->SetLabel("new value");
+    std::string s = text_field_2->GetValue().ToStdString();
+    wxLogMessage("Inserted: " + text_field_2->GetValue() + " into: " + category_combo_box->GetValue());
+    //category_label->SetLabel("new value");
 }
 
 /*
