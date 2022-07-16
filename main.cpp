@@ -1,6 +1,8 @@
 #include <iostream>
 #include <filesystem>
 #include <string>
+#include <fstream>
+#include "Bookmark_Counter_h.h"
 
 /* Troubleshoot
 
@@ -21,18 +23,7 @@ Configuration->Linker->System->Subsystem property to Windows (/SUBSYSTEM:WINDOWS
 
 #pragma warning(disable:4996)
 
-std::string get_current_date()
-{
-    // https://stackoverflow.com/questions/16357999/current-date-and-time-as-string/16358264
-    time_t rawtime;
-    struct tm* timeinfo;
-    char buffer[80];
-    time(&rawtime);
-    // Error C4996 'localtime': This function or variable may be unsafe.Consider using localtime_s instead.To disable deprecation, use _CRT_SECURE_NO_WARNINGS.
-    timeinfo = localtime(&rawtime);
-    strftime(buffer, sizeof(buffer), "%Y-%m-%d", timeinfo);
-    return buffer;
-}
+void insert_to_csv(std::string category_label);
 
 class Main_Application : public wxApp
 {
@@ -52,6 +43,7 @@ class Main_Frame : public wxFrame
         void OnExit(wxCommandEvent& event);
         void OnExercise(wxCommandEvent& event);
         void OnBookmark(wxCommandEvent& event);
+        
 };
 
 enum
@@ -101,10 +93,10 @@ Main_Frame::Main_Frame()
     wxArrayString m_arrItems;
 
     // Create common wxArrayString array
-    m_arrItems.Add(wxT("Exercise_"));
-    m_arrItems.Add(wxT("Time_"));
-    m_arrItems.Add(wxT("Bookmark_"));
-    m_arrItems.Add(wxT("Media_"));
+    m_arrItems.Add(wxT("_Exercise"));
+    m_arrItems.Add(wxT("_Time"));
+    m_arrItems.Add(wxT("_Bookmark"));
+    m_arrItems.Add(wxT("_Media"));
 
     wxStaticText* date_label = new wxStaticText(panel, -1, wxT("Current_Date:"));
     date_label->SetForegroundColour(wxColour(255,255,255));
@@ -153,6 +145,45 @@ void Main_Frame::OnInsert(wxCommandEvent& event)
     std::string s = text_field_2->GetValue().ToStdString();
     wxLogMessage("Inserted: " + text_field_2->GetValue() + " into: " + category_combo_box->GetValue());
     //category_label->SetLabel("new value");
+    insert_to_csv(category_combo_box->GetValue().ToStdString());
+}
+
+void insert_to_csv(std::string category_label)
+{
+    bookmark_counter_main();
+    /*
+    if (category_label == "_Bookmark")
+    {
+        std::ofstream output_file;
+        if (std::filesystem::exists("_Bookmark_Record.csv") == false)
+        {
+            std::cout << "[!] Creating new _Bookmark_Record.csv;" << "\n";
+            output_file.open("_Bookmark_Record.csv", std::ios::app);
+            std::cout << "[+] Opened _Bookmark_Record.csv successfully;" << "\n";
+            // Adding in column headings.
+            output_file << "Date" << "," << "Current Total" << "," << "Difference" << "\n";
+            std::cout << "[+] Adding new entry: ";
+            //std::cout << get_current_date() << "|" << current_bookmark_total_input << "|" << difference << "\n";
+            // Comma used as seperator in csv files.
+            output_file << get_current_date() << "," << current_bookmark_total_input << "," << difference << "\n";
+            //temp_report.push_back(get_current_date() + "," + std::to_string(current_bookmark_total_input) + "," + std::to_string(difference));
+            output_file.close();
+        }
+        else
+        {
+            // std::ios::app informs program to append and not to overwrite.
+            output_file.open("bookmark_record.csv", std::ios::app);
+            std::cout << "[+] Opened bookmark_record.csv successfully;" << "\n";
+            std::cout << "[+] Adding new entry: ";
+            difference = calculate_difference(current_bookmark_total_input);
+            std::cout << current_date << "|" << current_bookmark_total_input << "|" << difference << "\n";
+            // Comma used as seperator in csv files.
+            output_file << current_date << "," << current_bookmark_total_input << "," << difference << "\n";
+            temp_report.push_back(current_date + "," + std::to_string(current_bookmark_total_input) + "," + std::to_string(difference));
+            output_file.close();
+        }
+    }
+    */
 }
 
 /*
