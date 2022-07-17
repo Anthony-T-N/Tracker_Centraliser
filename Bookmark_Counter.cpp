@@ -1,9 +1,8 @@
-// Bookmark_Counter.cpp : This file contains the 'main' function. Program execution begins and ends there.
-
 #include <iostream>
 #include <fstream>
 #include <filesystem>
 #include <string>
+#include <wx/log.h>
 
 #pragma warning(disable:4996);
 
@@ -119,14 +118,19 @@ int write_to_csv(std::string current_date, int current_bookmark_total_input)
     std::ofstream output_file;
     if (std::filesystem::exists("bookmark_record.csv") == false)
     {
-        std::cout << "[!] Creating new bookmark_record.csv;" << "\n";
+        //std::cout << "[!] Creating new bookmark_record.csv;" << "\n";
+        wxLogMessage("[!] Creating new bookmark_record.csv;");
         output_file.open("bookmark_record.csv", std::ios::app);
-        std::cout << "[+] Opened bookmark_record.csv successfully;" << "\n";
+        //std::cout << "[+] Opened bookmark_record.csv successfully;" << "\n";
+        wxLogMessage("[+] Opened bookmark_record.csv successfully;");
         // Adding in column headings.
         output_file << "Date" << "," << "Current Total" << "," << "Difference" << "\n";
-        std::cout << "[+] Adding new entry: ";
-        std::cout << current_date << "|" << current_bookmark_total_input << "|" << difference << "\n";
-        // Comma used as seperator in csv files.
+        //std::cout << "[+] Adding new entry: ";
+        wxLogMessage("[+] Adding new entry: ");
+        //std::cout << current_date << "|" << current_bookmark_total_input << "|" << difference << "\n";
+        //std::string test = current_date + " | " + std::to_string(current_bookmark_total_input) + " | " + std::to_string(difference);
+        const wxString& msg = current_date + " | " + std::to_string(current_bookmark_total_input) + " | " + std::to_string(difference);
+        wxLogMessage(msg);
         output_file << current_date << "," << current_bookmark_total_input << "," << difference << "\n";
         temp_report.push_back(current_date + "," + std::to_string(current_bookmark_total_input) + "," + std::to_string(difference));
         output_file.close();
@@ -136,11 +140,11 @@ int write_to_csv(std::string current_date, int current_bookmark_total_input)
     {
         // std::ios::app informs program to append and not to overwrite.
         output_file.open("bookmark_record.csv", std::ios::app);
-        std::cout << "[+] Opened bookmark_record.csv successfully;" << "\n";
-        std::cout << "[+] Adding new entry: ";
+        wxLogMessage("[+] Opened bookmark_record.csv successfully;");
+        wxLogMessage("[+] Adding new entry: ");
         difference = calculate_difference(current_bookmark_total_input);
-        std::cout << current_date << "|" << current_bookmark_total_input << "|" << difference << "\n";
-        // Comma used as seperator in csv files.
+        const wxString& msg = current_date + " | " + std::to_string(current_bookmark_total_input) + " | " + std::to_string(difference);
+        wxLogMessage(msg);
         output_file << current_date << "," << current_bookmark_total_input << "," << difference << "\n";
         temp_report.push_back(current_date + "," + std::to_string(current_bookmark_total_input) + "," + std::to_string(difference));
         output_file.close();
@@ -148,38 +152,13 @@ int write_to_csv(std::string current_date, int current_bookmark_total_input)
     }
 }
 
-std::string user_input_validation()
+int bookmark_counter_main(int current_bookmark_total_input)
 {
-    // Function uses: <iostream>,
-
-    std::cout << "> Enter current total (int): ";
-    std::string user_input;
-    std::getline(std::cin, user_input);
-    while (std::cin.fail() || user_input.find_first_not_of("0123456789") != std::string::npos || user_input.empty())
-    {
-        std::cout << "[-] Invalid input - Please try again: ";
-        std::getline(std::cin, user_input);
-    }
-    return user_input;
-}
-
-int bookmark_counter_main()
-{
-    std::cout << "=======================================" << "\n";
-    std::cout << "- Bookmark_Counter console application" << "\n";
-    std::cout << "- Console Application Version: 1.0" << "\n";
-    std::cout << "- Created By: Anthony N." << "\n";
-    std::cout << "- Current location of executable: " << std::filesystem::current_path() << "\n";
-    std::cout << "=======================================" << "\n\n";
-
     while (true)
     {
-        // Note: Fails to validate very large numbers.
-        // Above 2147483647 to be exact.
-        int current_bookmark_total_input = stoi(user_input_validation());
         int first_csv = write_to_csv(get_current_date(), current_bookmark_total_input);
-        std::cout << "\n";
-        std::cout << "[========== Report ==========]" << "\n";
+        //std::cout << "\n";
+        wxLogMessage("[========== Report ==========]");
         if (temp_report.size() > 20)
         {
             for (int i = 20; i > 0; i--)
@@ -216,7 +195,7 @@ int bookmark_counter_main()
         }
         temp_report.clear();
     }
-    std::cout << "[!] END" << "\n";
-    std::cout << "[!] Exiting..." << "\n\n";
+    wxLogMessage("[!] END");
+    wxLogMessage("[!] Exiting...");
     return 0;
 }
