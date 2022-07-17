@@ -23,7 +23,7 @@ Configuration->Linker->System->Subsystem property to Windows (/SUBSYSTEM:WINDOWS
 
 #pragma warning(disable:4996)
 
-void insert_to_csv(std::string category_label);
+void insert_to_csv(std::string category_label, std::string text_field_2);
 
 class Main_Application : public wxApp
 {
@@ -142,48 +142,30 @@ Main_Frame::Main_Frame()
 
 void Main_Frame::OnInsert(wxCommandEvent& event)
 {
-    std::string s = text_field_2->GetValue().ToStdString();
-    wxLogMessage("Inserted: " + text_field_2->GetValue() + " into: " + category_combo_box->GetValue());
-    //category_label->SetLabel("new value");
-    insert_to_csv(category_combo_box->GetValue().ToStdString());
+    if (category_combo_box->GetValue().ToStdString() == "")
+    {
+        wxLogWarning("[-] Missing Category");
+    }
+    else
+    {
+        //category_label->SetLabel("new value"); Example to change label.
+        insert_to_csv(category_combo_box->GetValue().ToStdString(), text_field_2->GetValue().ToStdString());
+        wxLogMessage("Inserted: " + text_field_2->GetValue() + " into: " + category_combo_box->GetValue());
+    }
 }
 
-void insert_to_csv(std::string category_label)
+void insert_to_csv(std::string category_label, std::string text_field_2)
 {
-    bookmark_counter_main();
-    /*
     if (category_label == "_Bookmark")
     {
-        std::ofstream output_file;
-        if (std::filesystem::exists("_Bookmark_Record.csv") == false)
+        // Note: Fails to validate very large numbers (Above 2147483647 to be exact).
+        if (text_field_2.find_first_not_of("0123456789") != std::string::npos || text_field_2.empty())
         {
-            std::cout << "[!] Creating new _Bookmark_Record.csv;" << "\n";
-            output_file.open("_Bookmark_Record.csv", std::ios::app);
-            std::cout << "[+] Opened _Bookmark_Record.csv successfully;" << "\n";
-            // Adding in column headings.
-            output_file << "Date" << "," << "Current Total" << "," << "Difference" << "\n";
-            std::cout << "[+] Adding new entry: ";
-            //std::cout << get_current_date() << "|" << current_bookmark_total_input << "|" << difference << "\n";
-            // Comma used as seperator in csv files.
-            output_file << get_current_date() << "," << current_bookmark_total_input << "," << difference << "\n";
-            //temp_report.push_back(get_current_date() + "," + std::to_string(current_bookmark_total_input) + "," + std::to_string(difference));
-            output_file.close();
+            wxLogError("[-] Invalid input - Please try again:");
+            return;
         }
-        else
-        {
-            // std::ios::app informs program to append and not to overwrite.
-            output_file.open("bookmark_record.csv", std::ios::app);
-            std::cout << "[+] Opened bookmark_record.csv successfully;" << "\n";
-            std::cout << "[+] Adding new entry: ";
-            difference = calculate_difference(current_bookmark_total_input);
-            std::cout << current_date << "|" << current_bookmark_total_input << "|" << difference << "\n";
-            // Comma used as seperator in csv files.
-            output_file << current_date << "," << current_bookmark_total_input << "," << difference << "\n";
-            temp_report.push_back(current_date + "," + std::to_string(current_bookmark_total_input) + "," + std::to_string(difference));
-            output_file.close();
-        }
+        bookmark_counter_main(std::stoi(text_field_2));
     }
-    */
 }
 
 /*
@@ -206,7 +188,6 @@ int main()
     std::cout << "[!] END" << "\n";
     std::cout << "[!] Exiting..." << "\n\n";
     return 0;
-
 }
 */
 
