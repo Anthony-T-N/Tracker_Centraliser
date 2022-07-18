@@ -40,8 +40,8 @@ int calculate_difference(int current_bookmark_total_input)
     {
         if (temp_report[i] == "" || temp_report[i] == " " || temp_report[i] == ",,")
         {
-            std::cout << "[-] ATTENTION: Empty row located;" << "\n";
-            std::cout << "[!] Recommendation: Delete existing csv file or fix empty row;" << "\n";
+            wxLogMessage("[-] ATTENTION: Empty row located;");
+            wxLogMessage("[!] Recommendation: Delete existing csv file or fix empty row;");
             return 0;
         }
     }
@@ -54,7 +54,7 @@ void remove_csv_last_line()
 {
     // Function uses: <iostream>, <fstream>
 
-    std::cout << "[!] Removing last line" << "\n";
+    wxLogMessage("[!] Removing last line");
 
     std::ifstream input_file;
     input_file.open("bookmark_record.csv");
@@ -81,7 +81,7 @@ void remove_csv_last_line()
         output_file << input_file_line << "\n";
         if (last_line == line_counter)
         {
-            std::cout << "[!] Skip last line;" << "\n";
+            wxLogMessage("[!] Skip last line;");
             break;
         }
     }
@@ -89,23 +89,23 @@ void remove_csv_last_line()
     output_file.close();
     if (remove("bookmark_record.csv") == 0)
     {
-        std::cout << "[+] Filename deleted successfully" << "\n";
-        std::cout << "\"bookmark_record.csv\" deleted" << "\n\n";
+        wxLogMessage("[+] Filename deleted successfully");
+        wxLogMessage("\"bookmark_record.csv\" deleted");
     }
     else
     {
-        std::cout << "[-] Error with deletion" << "\n\n";
+        wxLogMessage("[-] Error with deletion");
     }
     int value = std::rename("temp_record.csv", "bookmark_record.csv");
     if (!value)
     {
-        std::cout << "[+] Filename renamed successfully" << "\n";
-        std::cout << "temp_record.csv > bookmark_record.csv" << "\n\n";
+        wxLogMessage("[+] Filename renamed successfully");
+        wxLogMessage("temp_record.csv > bookmark_record.csv");
     }
     else
     {
-        std::cout << "[-] Error with filename change" << "\n";
-        std::cout << "temp_record.csv !> bookmark_record.csv" << "\n\n";
+        wxLogMessage("[-] Error with filename change");
+        wxLogMessage("temp_record.csv !> bookmark_record.csv");
     }
 }
 
@@ -141,9 +141,8 @@ int write_to_csv(std::string current_date, int current_bookmark_total_input)
         // std::ios::app informs program to append and not to overwrite.
         output_file.open("bookmark_record.csv", std::ios::app);
         wxLogMessage("[+] Opened bookmark_record.csv successfully;");
-        wxLogMessage("[+] Adding new entry: ");
         difference = calculate_difference(current_bookmark_total_input);
-        const wxString& msg = current_date + " | " + std::to_string(current_bookmark_total_input) + " | " + std::to_string(difference);
+        const wxString& msg = "[+] Adding new entry: \n" + current_date + " | " + std::to_string(current_bookmark_total_input) + " | " + std::to_string(difference);
         wxLogMessage(msg);
         output_file << current_date << "," << current_bookmark_total_input << "," << difference << "\n";
         temp_report.push_back(current_date + "," + std::to_string(current_bookmark_total_input) + "," + std::to_string(difference));
@@ -154,30 +153,35 @@ int write_to_csv(std::string current_date, int current_bookmark_total_input)
 
 int bookmark_counter_main(int current_bookmark_total_input)
 {
+    std::string temp_report_log;
+
     while (true)
     {
         int first_csv = write_to_csv(get_current_date(), current_bookmark_total_input);
-        //std::cout << "\n";
         wxLogMessage("[========== Report ==========]");
         if (temp_report.size() > 20)
         {
             for (int i = 20; i > 0; i--)
             {
-                std::cout << temp_report[temp_report.size() - i] << "\n";
+                temp_report_log += temp_report[temp_report.size() - i] + "\n";
             }
+            const wxString& msg = temp_report_log;
+            wxLogMessage(msg);
         }
         else if (temp_report.size() < 20)
         {
             for (int i = temp_report.size(); i > 0; i--)
             {
-                std::cout << temp_report[temp_report.size() - i] << "\n";
+                temp_report_log += temp_report[temp_report.size() - i] + "\n";
             }
+            const wxString& msg = temp_report_log;
+            wxLogMessage(msg);
         }
-        std::cout << "\n";
+        //std::cout << "\n";
         // No option to undo changes for newly created CSV files.
         if (first_csv == 1)
         {
-            std::cout << "> Undo ? (y): ";
+            wxLogMessage("> Undo ? (y): ");
             std::string user_input;
             std::getline(std::cin, user_input);
             if (user_input == "y")
@@ -194,8 +198,7 @@ int bookmark_counter_main(int current_bookmark_total_input)
             break;
         }
         temp_report.clear();
+        temp_report_log.clear();
     }
-    wxLogMessage("[!] END");
-    wxLogMessage("[!] Exiting...");
     return 0;
 }
