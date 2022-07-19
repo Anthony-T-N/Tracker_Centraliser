@@ -23,7 +23,20 @@ Configuration->Linker->System->Subsystem property to Windows (/SUBSYSTEM:WINDOWS
 
 #pragma warning(disable:4996)
 
-void insert_to_csv(std::string category_label, std::string text_field_2);
+void insert_to_csv(std::string category_label, std::string text_field_1);
+
+std::string get_current_date()
+{
+    // https://stackoverflow.com/questions/16357999/current-date-and-time-as-string/16358264
+    time_t rawtime;
+    struct tm* timeinfo;
+    char buffer[80];
+    time(&rawtime);
+    // Error C4996 'localtime': This function or variable may be unsafe.Consider using localtime_s instead.To disable deprecation, use _CRT_SECURE_NO_WARNINGS.
+    timeinfo = localtime(&rawtime);
+    strftime(buffer, sizeof(buffer), "%Y-%m-%d", timeinfo);
+    return buffer;
+}
 
 class Main_Application : public wxApp
 {
@@ -35,6 +48,7 @@ class Main_Frame : public wxFrame
 {
     public:
         Main_Frame();
+        void UpdateStatusBar(wxString message);
         wxTextCtrl* MainEditBox;
 
     private:
@@ -61,7 +75,7 @@ wxStaticText* category_label;
 
 wxComboBox* category_combo_box;
 
-wxTextCtrl* text_field_2;
+wxTextCtrl* text_field_1;
 
 wxIMPLEMENT_APP(Main_Application);
 
@@ -93,10 +107,11 @@ Main_Frame::Main_Frame()
     wxArrayString m_arrItems;
 
     // Create common wxArrayString array
-    m_arrItems.Add(wxT("_Exercise"));
-    m_arrItems.Add(wxT("_Time"));
     m_arrItems.Add(wxT("_Bookmark"));
+    m_arrItems.Add(wxT("_Exercise"));
     m_arrItems.Add(wxT("_Media"));
+    m_arrItems.Add(wxT("_Time"));
+    m_arrItems.Add(wxT("_A"));
 
     wxStaticText* date_label = new wxStaticText(panel, -1, wxT("Current_Date:"));
     date_label->SetForegroundColour(wxColour(255,255,255));
@@ -110,7 +125,7 @@ Main_Frame::Main_Frame()
     wxTextCtrl* text_field_0 = new wxTextCtrl(panel, -1, get_current_date());
     //wxTextCtrl* text_field_1 = new wxTextCtrl(panel, -1);
     category_combo_box = new wxComboBox(panel, ID_COMBOBOX1, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_arrItems, wxCB_READONLY, wxDefaultValidator, _T("ID_COMBOBOX1"));
-    text_field_2 = new wxTextCtrl(panel, -1, wxT(""),
+    text_field_1 = new wxTextCtrl(panel, -1, wxT(""),
         wxPoint(-1, -1), wxSize(-1, -1), wxTE_MULTILINE);
 
     wxButton* insert_button = new wxButton(panel, BUTTON_Insert, _T("INSERT"),
@@ -122,7 +137,7 @@ Main_Frame::Main_Frame()
     fgs->Add(category_combo_box);
     //fgs->Add(text_field_1, 1, wxEXPAND);
     fgs->Add(record_label);
-    fgs->Add(text_field_2, 1, wxEXPAND);
+    fgs->Add(text_field_1, 1, wxEXPAND);
     fgs->Add(review_label, 1, wxEXPAND);
     fgs->Add(insert_button);
 
@@ -136,8 +151,20 @@ Main_Frame::Main_Frame()
     Centre();
 
     CreateStatusBar();
+    Main_Frame::UpdateStatusBar("Current path: " + std::filesystem::current_path().generic_string());
+
+    /*
+    CreateStatusBar();
     // "Bottom_Status_Bar"
     SetStatusText("Current path: " + std::filesystem::current_path().generic_string());
+    */
+}
+
+void Main_Frame::UpdateStatusBar(wxString message)
+{
+    wxStatusBar* status_text_bar = Main_Frame::GetStatusBar();
+    //bar->SetForegroundColour(wxColour(color));
+    status_text_bar->SetStatusText(message, 0); //text in field 0
 }
 
 void Main_Frame::OnInsert(wxCommandEvent& event)
@@ -149,22 +176,33 @@ void Main_Frame::OnInsert(wxCommandEvent& event)
     else
     {
         //category_label->SetLabel("new value"); Example to change label.
-        insert_to_csv(category_combo_box->GetValue().ToStdString(), text_field_2->GetValue().ToStdString());
-        wxLogMessage("Inserted: " + text_field_2->GetValue() + " into: " + category_combo_box->GetValue());
+        insert_to_csv(category_combo_box->GetValue().ToStdString(), text_field_1->GetValue().ToStdString());
+        wxLogMessage("Inserted: " + text_field_1->GetValue() + " into: " + category_combo_box->GetValue());
     }
 }
 
-void insert_to_csv(std::string category_label, std::string text_field_2)
+void insert_to_csv(std::string category_label, std::string text_field_1)
 {
     if (category_label == "_Bookmark")
     {
         // Note: Fails to validate very large numbers (Above 2147483647 to be exact).
-        if (text_field_2.find_first_not_of("0123456789") != std::string::npos || text_field_2.empty())
+        if (text_field_1.find_first_not_of("0123456789") != std::string::npos || text_field_1.empty())
         {
             wxLogError("[-] Invalid input - Please try again:");
             return;
         }
-        bookmark_counter_main(std::stoi(text_field_2));
+        bookmark_counter_main(std::stoi(text_field_1));
+        //wxStatusBar::PushStatusText("DELTA");
+        Main_Frame::UpdateStatusBar("Current path: " + std::filesystem::current_path().generic_string());
+    }
+    else if (category_label == "_Exercise")
+    {
+        // Note: Fails to validate very large numbers (Above 2147483647 to be exact).
+        if (text_field_1.find_first_not_of("0123456789") != std::string::npos || text_field_1.empty())
+        {
+            wxLogError("[-] Invalid input - Please try again:");
+            return;
+        }
     }
 }
 
