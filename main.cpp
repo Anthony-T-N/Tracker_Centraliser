@@ -25,6 +25,8 @@ Configuration->Linker->System->Subsystem property to Windows (/SUBSYSTEM:WINDOWS
 
 void insert_to_csv(std::string category_label, std::string text_field_1);
 
+wxStatusBar* status_text_bar;
+
 std::string get_current_date()
 {
     // https://stackoverflow.com/questions/16357999/current-date-and-time-as-string/16358264
@@ -193,7 +195,9 @@ void insert_to_csv(std::string category_label, std::string text_field_1)
         }
         bookmark_counter_main(std::stoi(text_field_1));
         //wxStatusBar::PushStatusText("DELTA");
-        Main_Frame::UpdateStatusBar("Current path: " + std::filesystem::current_path().generic_string());
+        //Main_Frame::UpdateStatusBar("Current path: ");
+        status_text_bar->SetStatusText("DETA", 0); //text in field 0
+
     }
     else if (category_label == "_Exercise")
     {
@@ -321,9 +325,9 @@ Brief : Centralise tracking of a number of activities.
 === Minimum Functions ===
 [-] Window that associate entered text/string with a time/date.
 [-] Entered text recorded in csv file.
-[-] Seperate buttons open seperate windows and accept different types of records.
 [-] Optimized to be lightweight and run in the background.
 [-] Fixed minimum window size ^ Maximum size
-[-] Dark background + White Text
+[+] Dark background + White Text
+[-] Change colour when Unfocused
 
 */
