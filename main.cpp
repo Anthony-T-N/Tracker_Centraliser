@@ -23,10 +23,6 @@ Configuration->Linker->System->Subsystem property to Windows (/SUBSYSTEM:WINDOWS
 
 #pragma warning(disable:4996)
 
-void insert_to_csv(std::string category_label, std::string text_field_1);
-
-wxStatusBar* status_text_bar;
-
 std::string get_current_date()
 {
     // https://stackoverflow.com/questions/16357999/current-date-and-time-as-string/16358264
@@ -59,6 +55,7 @@ class Main_Frame : public wxFrame
         void OnExit(wxCommandEvent& event);
         void OnExercise(wxCommandEvent& event);
         void OnBookmark(wxCommandEvent& event);
+        void insert_to_csv(std::string category_label, std::string text_field_1);
         
 };
 
@@ -74,9 +71,7 @@ const int ID_Bookmark = 3;
 const int ID_COMBOBOX1 = 4;
 
 wxStaticText* category_label;
-
 wxComboBox* category_combo_box;
-
 wxTextCtrl* text_field_1;
 
 wxIMPLEMENT_APP(Main_Application);
@@ -125,7 +120,6 @@ Main_Frame::Main_Frame()
     review_label->SetForegroundColour(wxColour(255, 255, 255));
 
     wxTextCtrl* text_field_0 = new wxTextCtrl(panel, -1, get_current_date());
-    //wxTextCtrl* text_field_1 = new wxTextCtrl(panel, -1);
     category_combo_box = new wxComboBox(panel, ID_COMBOBOX1, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_arrItems, wxCB_READONLY, wxDefaultValidator, _T("ID_COMBOBOX1"));
     text_field_1 = new wxTextCtrl(panel, -1, wxT(""),
         wxPoint(-1, -1), wxSize(-1, -1), wxTE_MULTILINE);
@@ -137,7 +131,6 @@ Main_Frame::Main_Frame()
     fgs->Add(text_field_0, 1, wxEXPAND);
     fgs->Add(category_label);
     fgs->Add(category_combo_box);
-    //fgs->Add(text_field_1, 1, wxEXPAND);
     fgs->Add(record_label);
     fgs->Add(text_field_1, 1, wxEXPAND);
     fgs->Add(review_label, 1, wxEXPAND);
@@ -154,12 +147,6 @@ Main_Frame::Main_Frame()
 
     CreateStatusBar();
     Main_Frame::UpdateStatusBar("Current path: " + std::filesystem::current_path().generic_string());
-
-    /*
-    CreateStatusBar();
-    // "Bottom_Status_Bar"
-    SetStatusText("Current path: " + std::filesystem::current_path().generic_string());
-    */
 }
 
 void Main_Frame::UpdateStatusBar(wxString message)
@@ -183,7 +170,7 @@ void Main_Frame::OnInsert(wxCommandEvent& event)
     }
 }
 
-void insert_to_csv(std::string category_label, std::string text_field_1)
+void Main_Frame::insert_to_csv(std::string category_label, std::string text_field_1)
 {
     if (category_label == "_Bookmark")
     {
@@ -194,14 +181,11 @@ void insert_to_csv(std::string category_label, std::string text_field_1)
             return;
         }
         bookmark_counter_main(std::stoi(text_field_1));
-        //wxStatusBar::PushStatusText("DELTA");
-        //Main_Frame::UpdateStatusBar("Current path: ");
-        status_text_bar->SetStatusText("DETA", 0); //text in field 0
+        Main_Frame::UpdateStatusBar("_Bookmark: Path");
 
     }
     else if (category_label == "_Exercise")
     {
-        // Note: Fails to validate very large numbers (Above 2147483647 to be exact).
         if (text_field_1.find_first_not_of("0123456789") != std::string::npos || text_field_1.empty())
         {
             wxLogError("[-] Invalid input - Please try again:");
