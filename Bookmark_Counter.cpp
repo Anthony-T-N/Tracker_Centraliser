@@ -3,23 +3,11 @@
 #include <filesystem>
 #include <string>
 #include <wx/log.h>
+#include "Bookmark_Counter_h.h"
 
 #pragma warning(disable:4996);
 
 std::vector<std::string> temp_report = {};
-
-std::string get_current_date()
-{
-    // https://stackoverflow.com/questions/16357999/current-date-and-time-as-string/16358264
-    time_t rawtime;
-    struct tm* timeinfo;
-    char buffer[80];
-    time(&rawtime);
-    // Error C4996 'localtime': This function or variable may be unsafe.Consider using localtime_s instead.To disable deprecation, use _CRT_SECURE_NO_WARNINGS.
-    timeinfo = localtime(&rawtime);
-    strftime(buffer, sizeof(buffer), "%Y-%m-%d", timeinfo);
-    return buffer;
-}
 
 int calculate_difference(int current_bookmark_total_input)
 {
@@ -118,17 +106,12 @@ int write_to_csv(std::string current_date, int current_bookmark_total_input)
     std::ofstream output_file;
     if (std::filesystem::exists("bookmark_record.csv") == false)
     {
-        //std::cout << "[!] Creating new bookmark_record.csv;" << "\n";
         wxLogMessage("[!] Creating new bookmark_record.csv;");
         output_file.open("bookmark_record.csv", std::ios::app);
-        //std::cout << "[+] Opened bookmark_record.csv successfully;" << "\n";
         wxLogMessage("[+] Opened bookmark_record.csv successfully;");
         // Adding in column headings.
         output_file << "Date" << "," << "Current Total" << "," << "Difference" << "\n";
-        //std::cout << "[+] Adding new entry: ";
         wxLogMessage("[+] Adding new entry: ");
-        //std::cout << current_date << "|" << current_bookmark_total_input << "|" << difference << "\n";
-        //std::string test = current_date + " | " + std::to_string(current_bookmark_total_input) + " | " + std::to_string(difference);
         const wxString& msg = current_date + " | " + std::to_string(current_bookmark_total_input) + " | " + std::to_string(difference);
         wxLogMessage(msg);
         output_file << current_date << "," << current_bookmark_total_input << "," << difference << "\n";
