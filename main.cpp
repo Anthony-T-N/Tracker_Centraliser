@@ -74,18 +74,21 @@ wxStaticText* category_label;
 wxComboBox* category_combo_box;
 wxTextCtrl* text_field_1;
 
-wxIMPLEMENT_APP(Main_Application);
-
 bool Main_Application::OnInit()
 {
     Main_Frame* fgs = new Main_Frame();
     // Create an instance of frame or window
     //Main_Frame* frame = new Main_Frame();
     // Show the window
+    //fgs->HasFlag(wxSTAY_ON_TOP);
+    //fgs->SetWindowStyleFlag(fgs->GetWindowStyleFlag() & ~wxSTAY_ON_TOP);
+    fgs->SetWindowStyleFlag(fgs->GetWindowStyleFlag() | wxSTAY_ON_TOP);
     fgs->Show(true);
+    
     
     return true;
 }
+wxIMPLEMENT_APP(Main_Application);
 
 Main_Frame::Main_Frame()
     : wxFrame(NULL, wxID_ANY, "Tracker_Centralizer", wxPoint(50, 50), wxSize(250, 250))
@@ -104,6 +107,7 @@ Main_Frame::Main_Frame()
     wxArrayString m_arrItems;
 
     // Create common wxArrayString array
+    m_arrItems.Add(wxT("_Critical_URLS"));
     m_arrItems.Add(wxT("_Bookmark"));
     m_arrItems.Add(wxT("_Exercise"));
     m_arrItems.Add(wxT("_Media"));
@@ -146,7 +150,7 @@ Main_Frame::Main_Frame()
     Centre();
 
     CreateStatusBar();
-    Main_Frame::UpdateStatusBar("Current path: " + std::filesystem::current_path().generic_string());
+    Main_Frame::UpdateStatusBar(": " + std::filesystem::current_path().generic_string());
 }
 
 void Main_Frame::UpdateStatusBar(wxString message)
@@ -181,7 +185,7 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_fiel
             return;
         }
         bookmark_counter_main(std::stoi(text_field_1));
-        Main_Frame::UpdateStatusBar("_Bookmark: Path");
+        Main_Frame::UpdateStatusBar(": " + std::filesystem::current_path().generic_string() + "/bookmark_record.csv");
 
     }
     else if (category_label == "_Exercise")
@@ -191,6 +195,7 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_fiel
             wxLogError("[-] Invalid input - Please try again:");
             return;
         }
+        //Main_Frame::UpdateStatusBar(": " + std::filesystem::current_path().generic_string() + "/bookmark_record.csv");
     }
 }
 
