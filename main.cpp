@@ -110,8 +110,8 @@ Main_Frame::Main_Frame()
     m_arrItems.Add(wxT("_Critical_URLS"));
     m_arrItems.Add(wxT("_Bookmark"));
     m_arrItems.Add(wxT("_Exercise"));
+    m_arrItems.Add(wxT("_Events"));
     m_arrItems.Add(wxT("_Media"));
-    m_arrItems.Add(wxT("_Time"));
     m_arrItems.Add(wxT("_A"));
 
     wxStaticText* date_label = new wxStaticText(panel, -1, wxT("Current_Date:"));
@@ -170,7 +170,7 @@ void Main_Frame::OnInsert(wxCommandEvent& event)
     {
         //category_label->SetLabel("new value"); Example to change label.
         insert_to_csv(category_combo_box->GetValue().ToStdString(), text_field_1->GetValue().ToStdString());
-        wxLogMessage("Inserted: " + text_field_1->GetValue() + " into: " + category_combo_box->GetValue());
+        //wxLogMessage("Inserted: " + text_field_1->GetValue() + " into: " + category_combo_box->GetValue());
     }
 }
 
@@ -197,6 +197,7 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_fiel
         }
         //Main_Frame::UpdateStatusBar(": " + std::filesystem::current_path().generic_string() + "/bookmark_record.csv");
     }
+    wxLogMessage("Inserted: " + text_field_1 + " into: " + category_combo_box->GetValue());
 }
 
 /*
