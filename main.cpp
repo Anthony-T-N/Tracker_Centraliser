@@ -91,7 +91,7 @@ bool Main_Application::OnInit()
 wxIMPLEMENT_APP(Main_Application);
 
 Main_Frame::Main_Frame()
-    : wxFrame(NULL, wxID_ANY, "Tracker_Centralizer", wxPoint(50, 50), wxSize(250, 250))
+    : wxFrame(NULL, wxID_ANY, "Tracker_Centraliser", wxPoint(50, 50), wxSize(250, 250))
 {
     wxPanel* panel = new wxPanel(this, -1);
 
@@ -196,6 +196,7 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_fiel
             return;
         }
         //Main_Frame::UpdateStatusBar(": " + std::filesystem::current_path().generic_string() + "/bookmark_record.csv");
+        root_folder_creation("_Exercise.csv");
     }
     wxLogMessage("Inserted: " + text_field_1 + " into: " + category_combo_box->GetValue());
 }
