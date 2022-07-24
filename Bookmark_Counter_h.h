@@ -3,10 +3,11 @@
 
 #include <string>
 
-int calculate_difference(int current_bookmark_total_input);
-void remove_csv_last_line();
-int write_to_csv(std::string current_date, int current_bookmark_total_input);
+//Bookmark_Counter.cpp
 int bookmark_counter_main(int test);
 std::string get_current_date();
+
+//CSV_Maintainer.cpp
+void root_folder_creation(std::string csv_file_name);
 
 #endif
