@@ -20,8 +20,6 @@
 			-> file3.csv
 */
 
-std::vector<std::string> temp_report_c = {};
-
 void root_folder_creation(std::string root_folder_name, std::string csv_file_name)
 {
     if (std::filesystem::exists(root_folder_name) == false)
@@ -32,16 +30,18 @@ void root_folder_creation(std::string root_folder_name, std::string csv_file_nam
     std::ofstream output_file;
     if (std::filesystem::exists(root_folder_name + "/" + csv_file_name) == false)
     {
-        const wxString& temp_log_message = "[-]" + root_folder_name + "/" + csv_file_name;
+        wxString temp_log_message = "[-] " + root_folder_name + "/" + csv_file_name + " does not exist";
         wxLogMessage(temp_log_message);
         output_file.open(root_folder_name + "/" + csv_file_name);
-        wxLogMessage("[+] Created " + temp_log_message + "successfully;");
+        temp_log_message = root_folder_name + "/" + csv_file_name;
+        wxLogMessage("[+] Created " + temp_log_message + " successfully;");
+        output_file.close();
     }
 }
 
 int write_to_csv(std::string current_date, std::string root_folder_name, std::string csv_file_name, std::string message)
 {
-    int difference = 0;
+    std::vector<std::string> temp_report_c = {};
     // output file stream allows you to write contents to a file.
     std::ofstream output_file;
     if (std::filesystem::exists(root_folder_name + "/" + csv_file_name) == false)
