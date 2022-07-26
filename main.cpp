@@ -107,7 +107,7 @@ Main_Frame::Main_Frame()
     wxArrayString m_arrItems;
 
     // Create common wxArrayString array
-    m_arrItems.Add(wxT("_Critical_URLS"));
+    m_arrItems.Add(wxT("_Critical_URLs"));
     m_arrItems.Add(wxT("_Bookmark"));
     m_arrItems.Add(wxT("_Exercise"));
     m_arrItems.Add(wxT("_Events"));
@@ -176,6 +176,10 @@ void Main_Frame::OnInsert(wxCommandEvent& event)
 
 void Main_Frame::insert_to_csv(std::string category_label, std::string text_field_1)
 {
+    if (category_label == "_Critical_URLs")
+    {
+        csv_maintainer_main("_Critical_URLs.csv", text_field_1);
+    }
     if (category_label == "_Bookmark")
     {
         // Note: Fails to validate very large numbers (Above 2147483647 to be exact).
@@ -196,7 +200,7 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_fiel
             return;
         }
         //Main_Frame::UpdateStatusBar(": " + std::filesystem::current_path().generic_string() + "/bookmark_record.csv");
-        root_folder_creation("_Exercise.csv");
+        csv_maintainer_main("_Exercise.csv", text_field_1);
     }
     wxLogMessage("Inserted: " + text_field_1 + " into: " + category_combo_box->GetValue());
 }
