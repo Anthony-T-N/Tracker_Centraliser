@@ -2,6 +2,7 @@
 #include <fstream>
 #include <filesystem>
 #include <string>
+#include <map>
 #include <wx/log.h>
 #include "Bookmark_Counter_h.h"
 
@@ -69,6 +70,76 @@ int write_to_csv(std::string current_date, std::string root_folder_name, std::st
         temp_report_c.push_back(current_date + "," + message);
         output_file.close();
         return 1;
+    }
+}
+
+void sort_date()
+{
+    std::ifstream input_file;
+    input_file.open("bookmark_record.csv");
+
+    std::ofstream output_file;
+    output_file.open("temp_record.csv");
+
+    std::string input_file_line;
+    int line_counter = 0;
+    while (std::getline(input_file, input_file_line))
+    {
+        line_counter++;
+    }
+
+    // https://forums.codeguru.com/showthread.php?320724-how-to-reset-quot-getline(File-string)-quot
+    input_file.clear();
+    input_file.seekg(0, std::ios::beg);
+
+    std::map<std::string, std::string> my_map =
+    {
+        { "A8", "A8" },
+        { "A8", "A8" },
+        { "A8", "A8" }
+    };
+
+    std::map<std::string, std::string> date_record_map;
+    int pos;
+    wxString test = "";
+
+    int last_line = line_counter - 1;
+    line_counter = 0;
+    while (std::getline(input_file, input_file_line))
+    {
+        line_counter++;
+        date_record_map;
+        pos = input_file_line.find(",");
+        test = input_file_line.substr(0, pos);
+        wxLogMessage(test);
+        output_file << input_file_line << "\n";
+        if (last_line == line_counter)
+        {
+            wxLogMessage("[!] Skip last line;");
+            break;
+        }
+    }
+    input_file.close();
+    output_file.close();
+    if (remove("bookmark_record.csv") == 0)
+    {
+        wxLogMessage("[+] Filename deleted successfully");
+        wxLogMessage("\"bookmark_record.csv\" deleted");
+    }
+    else
+    {
+        wxLogMessage("[-] Error with deletion");
+    }
+    int value = std::rename("temp_record.csv", "bookmark_record.csv");
+    if (!value)
+    {
+        wxLogMessage("[+] Filename renamed successfully");
+        wxLogMessage("temp_record.csv > bookmark_record.csv");
+    }
+    else
+    {
+        wxLogMessage("[-] Error with filename change");
+        wxLogMessage("temp_record.csv !> bookmark_record.csv");
     }
 }
 
