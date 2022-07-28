@@ -102,16 +102,18 @@ void sort_date()
     std::map<std::string, std::string> date_record_map;
     int pos;
     wxString test = "";
+    wxString s_test = "";
 
     int last_line = line_counter - 1;
     line_counter = 0;
     while (std::getline(input_file, input_file_line))
     {
         line_counter++;
-        date_record_map;
-        pos = input_file_line.find(",");
-        test = input_file_line.substr(0, pos);
+        test = input_file_line.substr(0, input_file_line.find(","));
+        s_test = input_file_line.substr(input_file_line.find(",") + 1);
         wxLogMessage(test);
+        wxLogMessage(s_test);
+        date_record_map.insert({"7h", "88"});
         output_file << input_file_line << "\n";
         if (last_line == line_counter)
         {
