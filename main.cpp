@@ -55,7 +55,7 @@ class Main_Frame : public wxFrame
         void OnExit(wxCommandEvent& event);
         void OnExercise(wxCommandEvent& event);
         void OnBookmark(wxCommandEvent& event);
-        void insert_to_csv(std::string category_label, std::string text_field_1);
+        void insert_to_csv(std::string category_label, std::string text_field_0, std::string text_field_1);
         
 };
 
@@ -72,6 +72,7 @@ const int ID_COMBOBOX1 = 4;
 
 wxStaticText* category_label;
 wxComboBox* category_combo_box;
+wxTextCtrl* text_field_0;
 wxTextCtrl* text_field_1;
 
 bool Main_Application::OnInit()
@@ -104,15 +105,16 @@ Main_Frame::Main_Frame()
 
     //SetMinSize(GetBestSize());
 
-    wxArrayString m_arrItems;
+    wxArrayString category_item_arr;
 
     // Create common wxArrayString array
-    m_arrItems.Add(wxT("_Critical_URLs"));
-    m_arrItems.Add(wxT("_Bookmark"));
-    m_arrItems.Add(wxT("_Exercise"));
-    m_arrItems.Add(wxT("_Events"));
-    m_arrItems.Add(wxT("_Media"));
-    m_arrItems.Add(wxT("_A"));
+    category_item_arr.Add(wxT("_Critical_URLs"));
+    category_item_arr.Add(wxT("_Bookmark"));
+    category_item_arr.Add(wxT("_Exercise"));
+    category_item_arr.Add(wxT("_Events"));
+    category_item_arr.Add(wxT("_Books"));
+    category_item_arr.Add(wxT("_Media"));
+    category_item_arr.Add(wxT("_A"));
 
     wxStaticText* date_label = new wxStaticText(panel, -1, wxT("Current_Date:"));
     date_label->SetForegroundColour(wxColour(255,255,255));
@@ -123,8 +125,8 @@ Main_Frame::Main_Frame()
     wxStaticText* review_label = new wxStaticText(panel, -1, wxT("Review:"));
     review_label->SetForegroundColour(wxColour(255, 255, 255));
 
-    wxTextCtrl* text_field_0 = new wxTextCtrl(panel, -1, get_current_date());
-    category_combo_box = new wxComboBox(panel, ID_COMBOBOX1, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_arrItems, wxCB_READONLY, wxDefaultValidator, _T("ID_COMBOBOX1"));
+    text_field_0 = new wxTextCtrl(panel, -1, get_current_date());
+    category_combo_box = new wxComboBox(panel, ID_COMBOBOX1, wxEmptyString, wxDefaultPosition, wxDefaultSize, category_item_arr, wxCB_READONLY, wxDefaultValidator, _T("ID_COMBOBOX1"));
     text_field_1 = new wxTextCtrl(panel, -1, wxT(""),
         wxPoint(-1, -1), wxSize(-1, -1), wxTE_MULTILINE);
 
@@ -169,16 +171,23 @@ void Main_Frame::OnInsert(wxCommandEvent& event)
     else
     {
         //category_label->SetLabel("new value"); Example to change label.
-        insert_to_csv(category_combo_box->GetValue().ToStdString(), text_field_1->GetValue().ToStdString());
+        insert_to_csv(category_combo_box->GetValue().ToStdString(), text_field_0->GetValue().ToStdString(), text_field_1->GetValue().ToStdString());
         //wxLogMessage("Inserted: " + text_field_1->GetValue() + " into: " + category_combo_box->GetValue());
     }
 }
 
-void Main_Frame::insert_to_csv(std::string category_label, std::string text_field_1)
+void Main_Frame::insert_to_csv(std::string category_label, std::string text_field_0, std::string text_field_1)
 {
+    //sort_date();
+    //return;
+    if (text_field_0.empty() || text_field_1.empty())
+    {
+        wxLogError("[-] Invalid input - Empty Field");
+        return;
+    }
     if (category_label == "_Critical_URLs")
     {
-        csv_maintainer_main("_Critical_URLs.csv", text_field_1);
+        csv_maintainer_main("_Critical_URLs.csv", text_field_0, text_field_1);
     }
     if (category_label == "_Bookmark")
     {
@@ -200,7 +209,7 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_fiel
             return;
         }
         //Main_Frame::UpdateStatusBar(": " + std::filesystem::current_path().generic_string() + "/bookmark_record.csv");
-        csv_maintainer_main("_Exercise.csv", text_field_1);
+        csv_maintainer_main("_Exercise.csv", text_field_0, text_field_1);
     }
     wxLogMessage("Inserted: " + text_field_1 + " into: " + category_combo_box->GetValue());
 }
@@ -318,11 +327,12 @@ Brief : Centralise tracking of a number of activities.
 [Version 1]
 
 === Minimum Functions ===
-[-] Window that associate entered text/string with a time/date.
-[-] Entered text recorded in csv file.
+[+] Window that associate entered text/string with a time/date.
+[+] Entered text recorded in csv file.
 [-] Optimized to be lightweight and run in the background.
 [-] Fixed minimum window size ^ Maximum size
 [+] Dark background + White Text
 [-] Change colour when Unfocused
+[-] Organise entries by date.
 
 */
