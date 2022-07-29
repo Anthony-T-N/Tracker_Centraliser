@@ -40,7 +40,7 @@ void root_folder_creation(std::string root_folder_name, std::string csv_file_nam
     }
 }
 
-int write_to_csv(std::string current_date, std::string root_folder_name, std::string csv_file_name, std::string message)
+int write_to_csv(std::string root_folder_name, std::string csv_file_name, std::string current_date, std::string message)
 {
     std::vector<std::string> temp_report_c = {};
     // output file stream allows you to write contents to a file.
@@ -100,20 +100,20 @@ void sort_date()
     };
 
     std::map<std::string, std::string> date_record_map;
-    int pos;
-    wxString test = "";
-    wxString s_test = "";
+    int pos = 0;
+    std::string date_record_map_key = "";
+    std::string date_record_map_value = "";
 
     int last_line = line_counter - 1;
     line_counter = 0;
     while (std::getline(input_file, input_file_line))
     {
         line_counter++;
-        test = input_file_line.substr(0, input_file_line.find(","));
-        s_test = input_file_line.substr(input_file_line.find(",") + 1);
-        wxLogMessage(test);
-        wxLogMessage(s_test);
-        date_record_map.insert({"7h", "88"});
+        date_record_map_key = input_file_line.substr(0, input_file_line.find(","));
+        date_record_map_value = input_file_line.substr(input_file_line.find(",") + 1);
+        wxLogMessage(date_record_map_key.c_str());
+        wxLogMessage(date_record_map_value.c_str());
+        date_record_map.insert({ date_record_map_key, date_record_map_value});
         output_file << input_file_line << "\n";
         if (last_line == line_counter)
         {
@@ -145,10 +145,10 @@ void sort_date()
     }
 }
 
-int csv_maintainer_main(std::string csv_file_name, std::string message)
+int csv_maintainer_main(std::string csv_file_name, std::string date, std::string message)
 {
     std::string root_folder_name("_Tracking_Centraliser_Root_Folder");
     root_folder_creation(root_folder_name, csv_file_name);
-    write_to_csv(get_current_date(), root_folder_name, csv_file_name, message);
+    write_to_csv(root_folder_name, csv_file_name, date, message);
     return 0;
 }
