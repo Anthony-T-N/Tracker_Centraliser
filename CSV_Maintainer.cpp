@@ -73,13 +73,16 @@ int write_to_csv(std::string root_folder_name, std::string csv_file_name, std::s
     }
 }
 
-void sort_date()
+void sort_record_dates(std::string csv_file_name)
 {
+    std::string root_folder_name("_Tracking_Centraliser_Root_Folder");
+    root_folder_creation(root_folder_name, csv_file_name);
+
     std::ifstream input_file;
-    input_file.open("bookmark_record.csv");
+    input_file.open(root_folder_name + "/" + csv_file_name);
 
     std::ofstream output_file;
-    output_file.open("temp_record.csv");
+    output_file.open(root_folder_name + "/" + "temp_record.csv");
 
     std::string input_file_line;
     int line_counter = 0;
@@ -115,15 +118,19 @@ void sort_date()
         wxLogMessage(date_record_map_value.c_str());
         date_record_map.insert({ date_record_map_key, date_record_map_value});
         output_file << input_file_line << "\n";
+        /*
         if (last_line == line_counter)
         {
             wxLogMessage("[!] Skip last line;");
             break;
         }
+        */
     }
     input_file.close();
     output_file.close();
-    if (remove("bookmark_record.csv") == 0)
+    std::string test = root_folder_name + "/" + csv_file_name;
+    // https://stackoverflow.com/questions/6674611/deleting-a-file-with-string-in-the-arguments
+    if (remove(test.c_str()) == 0)
     {
         wxLogMessage("[+] Filename deleted successfully");
         wxLogMessage("\"bookmark_record.csv\" deleted");
@@ -132,7 +139,7 @@ void sort_date()
     {
         wxLogMessage("[-] Error with deletion");
     }
-    int value = std::rename("temp_record.csv", "bookmark_record.csv");
+    int value = std::rename((root_folder_name + "/" + "temp_record.csv").c_str(), (root_folder_name + "/" + csv_file_name).c_str());
     if (!value)
     {
         wxLogMessage("[+] Filename renamed successfully");
