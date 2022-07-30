@@ -85,8 +85,7 @@ bool Main_Application::OnInit()
     //fgs->SetWindowStyleFlag(fgs->GetWindowStyleFlag() & ~wxSTAY_ON_TOP);
     fgs->SetWindowStyleFlag(fgs->GetWindowStyleFlag() | wxSTAY_ON_TOP);
     fgs->Show(true);
-    
-    
+
     return true;
 }
 wxIMPLEMENT_APP(Main_Application);
@@ -114,7 +113,9 @@ Main_Frame::Main_Frame()
     category_item_arr.Add(wxT("_Events"));
     category_item_arr.Add(wxT("_Books"));
     category_item_arr.Add(wxT("_Media"));
+    category_item_arr.Add(wxT("_Art"));
     category_item_arr.Add(wxT("_A"));
+    category_item_arr.Add(wxT("_Record_Sort_Debug"));
 
     wxStaticText* date_label = new wxStaticText(panel, -1, wxT("Current_Date:"));
     date_label->SetForegroundColour(wxColour(255,255,255));
@@ -178,8 +179,12 @@ void Main_Frame::OnInsert(wxCommandEvent& event)
 
 void Main_Frame::insert_to_csv(std::string category_label, std::string text_field_0, std::string text_field_1)
 {
-    //sort_date();
+    
     //return;
+    if (category_label == "_Record_Sort_Debug")
+    {
+        sort_record_dates("_Record_Sort_Debug.csv");
+    }
     if (text_field_0.empty() || text_field_1.empty())
     {
         wxLogError("[-] Invalid input - Empty Field");
