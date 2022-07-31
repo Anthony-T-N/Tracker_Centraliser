@@ -107,16 +107,21 @@ void sort_record_dates(std::string csv_file_name)
     std::string date_record_map_key = "";
     std::string date_record_map_value = "";
 
+    std::vector<std::string> input_file_line_vec;
+
     int last_line = line_counter - 1;
     line_counter = 0;
     while (std::getline(input_file, input_file_line))
     {
         line_counter++;
+        /*
         date_record_map_key = input_file_line.substr(0, input_file_line.find(","));
         date_record_map_value = input_file_line.substr(input_file_line.find(",") + 1);
         wxLogMessage(date_record_map_key.c_str());
         wxLogMessage(date_record_map_value.c_str());
         date_record_map.insert({ date_record_map_key, date_record_map_value});
+        */
+        input_file_line_vec.push_back(input_file_line);
         output_file << input_file_line << "\n";
         /*
         if (last_line == line_counter)
@@ -126,6 +131,13 @@ void sort_record_dates(std::string csv_file_name)
         }
         */
     }
+    for (int i = 0; i <= input_file_line_vec.size() - 1; i++)
+    {
+        std::string test = input_file_line_vec[i].substr(0, input_file_line.find(","));
+        wxLogMessage(test.c_str());
+        // Sort
+    }
+
     input_file.close();
     output_file.close();
     std::string test = root_folder_name + "/" + csv_file_name;
