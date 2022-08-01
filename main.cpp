@@ -111,8 +111,9 @@ Main_Frame::Main_Frame()
     category_item_arr.Add(wxT("_Bookmark"));
     category_item_arr.Add(wxT("_Exercise"));
     category_item_arr.Add(wxT("_Events"));
-    category_item_arr.Add(wxT("_Books"));
-    category_item_arr.Add(wxT("_Media"));
+    category_item_arr.Add(wxT("_Series"));
+    category_item_arr.Add(wxT("_Films"));
+    category_item_arr.Add(wxT("_Books"));    
     category_item_arr.Add(wxT("_Art"));
     category_item_arr.Add(wxT("_A"));
     category_item_arr.Add(wxT("_Record_Sort_Debug"));
@@ -179,8 +180,6 @@ void Main_Frame::OnInsert(wxCommandEvent& event)
 
 void Main_Frame::insert_to_csv(std::string category_label, std::string text_field_0, std::string text_field_1)
 {
-    
-    //return;
     if (category_label == "_Record_Sort_Debug")
     {
         sort_record_dates("_Record_Sort_Debug.csv");
@@ -194,7 +193,7 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_fiel
     {
         csv_maintainer_main("_Critical_URLs.csv", text_field_0, text_field_1);
     }
-    if (category_label == "_Bookmark")
+    else if (category_label == "_Bookmark")
     {
         // Note: Fails to validate very large numbers (Above 2147483647 to be exact).
         if (text_field_1.find_first_not_of("0123456789") != std::string::npos || text_field_1.empty())
@@ -215,6 +214,36 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_fiel
         }
         //Main_Frame::UpdateStatusBar(": " + std::filesystem::current_path().generic_string() + "/bookmark_record.csv");
         csv_maintainer_main("_Exercise.csv", text_field_0, text_field_1);
+    }
+    else if (category_label == "_Events")
+    {
+        //Main_Frame::UpdateStatusBar(": " + std::filesystem::current_path().generic_string() + "/bookmark_record.csv");
+        csv_maintainer_main(category_label + ".csv", text_field_0, text_field_1);
+    }
+    else if (category_label == "_Series")
+    {
+        //Main_Frame::UpdateStatusBar(": " + std::filesystem::current_path().generic_string() + "/bookmark_record.csv");
+        csv_maintainer_main(category_label + ".csv", text_field_0, text_field_1);
+    }
+    else if (category_label == "_Films")
+    {
+        //Main_Frame::UpdateStatusBar(": " + std::filesystem::current_path().generic_string() + "/bookmark_record.csv");
+        csv_maintainer_main(category_label + ".csv", text_field_0, text_field_1);
+    }
+    else if (category_label == "_Books")
+    {
+        //Main_Frame::UpdateStatusBar(": " + std::filesystem::current_path().generic_string() + "/bookmark_record.csv");
+        csv_maintainer_main(category_label + ".csv", text_field_0, text_field_1);
+    }
+    else if (category_label == "_Art")
+    {
+        //Main_Frame::UpdateStatusBar(": " + std::filesystem::current_path().generic_string() + "/bookmark_record.csv");
+        csv_maintainer_main(category_label + ".csv", text_field_0, text_field_1);
+    }
+    else if (category_label == "_A")
+    {
+        Main_Frame::UpdateStatusBar(": " + std::filesystem::current_path().generic_string() + "/" + category_label + ".csv");
+        csv_maintainer_main(category_label + ".csv", text_field_0, text_field_1);
     }
     wxLogMessage("Inserted: " + text_field_1 + " into: " + category_combo_box->GetValue());
 }
