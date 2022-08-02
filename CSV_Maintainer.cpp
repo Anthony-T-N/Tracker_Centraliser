@@ -131,11 +131,23 @@ void sort_record_dates(std::string csv_file_name)
         }
         */
     }
+
     for (int i = 0; i <= input_file_line_vec.size() - 1; i++)
     {
-        std::string test = input_file_line_vec[i].substr(0, input_file_line.find(","));
-        wxLogMessage(test.c_str());
-        // Sort
+        for (int j = i; j < (input_file_line_vec.size()); j++)
+        {
+            std::string test = input_file_line_vec[i].substr(0, input_file_line_vec[i].find(","));
+            test.erase(std::remove(test.begin(), test.end(), '-'), test.end());
+            std::string test_two = input_file_line_vec[j].substr(0, input_file_line_vec[j].find(","));
+            test.erase(std::remove(test.begin(), test.end(), '-'), test.end());
+
+            //wxLogMessage(test.c_str());
+
+            if (test > test_two)
+            {
+                std::swap(input_file_line_vec[i], input_file_line_vec[j]);
+            }
+        }
     }
 
     input_file.close();
