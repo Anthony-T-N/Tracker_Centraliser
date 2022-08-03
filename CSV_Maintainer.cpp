@@ -95,18 +95,6 @@ void sort_record_dates(std::string csv_file_name)
     input_file.clear();
     input_file.seekg(0, std::ios::beg);
 
-    std::map<std::string, std::string> my_map =
-    {
-        { "A8", "A8" },
-        { "A8", "A8" },
-        { "A8", "A8" }
-    };
-
-    std::map<std::string, std::string> date_record_map;
-    int pos = 0;
-    std::string date_record_map_key = "";
-    std::string date_record_map_value = "";
-
     std::vector<std::string> input_file_line_vec;
 
     int last_line = line_counter - 1;
@@ -114,13 +102,7 @@ void sort_record_dates(std::string csv_file_name)
     while (std::getline(input_file, input_file_line))
     {
         line_counter++;
-        /*
-        date_record_map_key = input_file_line.substr(0, input_file_line.find(","));
-        date_record_map_value = input_file_line.substr(input_file_line.find(",") + 1);
-        wxLogMessage(date_record_map_key.c_str());
-        wxLogMessage(date_record_map_value.c_str());
-        date_record_map.insert({ date_record_map_key, date_record_map_value});
-        */
+
         input_file_line_vec.push_back(input_file_line);
         output_file << input_file_line << "\n";
         /*
@@ -136,20 +118,23 @@ void sort_record_dates(std::string csv_file_name)
     {
         for (int j = i; j < (input_file_line_vec.size()); j++)
         {
-            std::string test = input_file_line_vec[i].substr(0, input_file_line_vec[i].find(","));
-            test.erase(std::remove(test.begin(), test.end(), '-'), test.end());
-            std::string test_two = input_file_line_vec[j].substr(0, input_file_line_vec[j].find(","));
-            test.erase(std::remove(test.begin(), test.end(), '-'), test.end());
-
-            //wxLogMessage(test.c_str());
-
-            if (test > test_two)
+            std::string primary_line = input_file_line_vec[i].substr(0, input_file_line_vec[i].find(","));
+            primary_line.erase(std::remove(primary_line.begin(), primary_line.end(), '-'), primary_line.end());
+            std::string secondary_line = input_file_line_vec[j].substr(0, input_file_line_vec[j].find(","));
+            secondary_line.erase(std::remove(secondary_line.begin(), secondary_line.end(), '-'), secondary_line.end());
+            std::string full_test = primary_line + " > " + secondary_line;
+            wxLogMessage(full_test.c_str());
+            if (primary_line > secondary_line)
             {
                 std::swap(input_file_line_vec[i], input_file_line_vec[j]);
             }
         }
     }
-
+    wxLogMessage("BREAK");
+    for (int i = 0; i < (input_file_line_vec.size()); i++)
+    {
+        wxLogMessage(input_file_line_vec[i].c_str());
+    }
     input_file.close();
     output_file.close();
     std::string test = root_folder_name + "/" + csv_file_name;
