@@ -108,12 +108,13 @@ Main_Frame::Main_Frame()
 
     // Create common wxArrayString array
     category_item_arr.Add(wxT("_Critical_URLs"));
+    category_item_arr.Add(wxT("_Sleep_Time"));
     category_item_arr.Add(wxT("_Bookmark"));
     category_item_arr.Add(wxT("_Exercise"));
     category_item_arr.Add(wxT("_Events"));
     category_item_arr.Add(wxT("_Series"));
     category_item_arr.Add(wxT("_Films"));
-    category_item_arr.Add(wxT("_Books"));    
+    category_item_arr.Add(wxT("_Books"));
     category_item_arr.Add(wxT("_Art"));
     category_item_arr.Add(wxT("_A"));
     category_item_arr.Add(wxT("_Record_Sort_Debug"));
@@ -138,7 +139,7 @@ Main_Frame::Main_Frame()
     fgs->Add(date_label);
     fgs->Add(text_field_0, 1, wxEXPAND);
     fgs->Add(category_label);
-    fgs->Add(category_combo_box);
+    fgs->Add(category_combo_box, 1, wxEXPAND);
     fgs->Add(record_label);
     fgs->Add(text_field_1, 1, wxEXPAND);
     fgs->Add(review_label, 1, wxEXPAND);
@@ -189,9 +190,15 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_fiel
         wxLogError("[-] Invalid input - Empty Field");
         return;
     }
+    // Removing new lines from inputted text.
+    text_field_1.erase(std::remove(text_field_1.begin(), text_field_1.end(), '\n'), text_field_1.end());
     if (category_label == "_Critical_URLs")
     {
         csv_maintainer_main("_Critical_URLs.csv", text_field_0, text_field_1);
+    }
+    else if (category_label == "_Sleep_Time")
+    {
+        csv_maintainer_main(category_label + ".csv", text_field_0, text_field_1);
     }
     else if (category_label == "_Bookmark")
     {
@@ -203,7 +210,6 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_fiel
         }
         bookmark_counter_main(std::stoi(text_field_1));
         Main_Frame::UpdateStatusBar(": " + std::filesystem::current_path().generic_string() + "/bookmark_record.csv");
-
     }
     else if (category_label == "_Exercise")
     {
@@ -212,39 +218,34 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_fiel
             wxLogError("[-] Invalid input - Please try again:");
             return;
         }
-        //Main_Frame::UpdateStatusBar(": " + std::filesystem::current_path().generic_string() + "/bookmark_record.csv");
         csv_maintainer_main("_Exercise.csv", text_field_0, text_field_1);
     }
+    // BAD: Remove please
     else if (category_label == "_Events")
     {
-        //Main_Frame::UpdateStatusBar(": " + std::filesystem::current_path().generic_string() + "/bookmark_record.csv");
         csv_maintainer_main(category_label + ".csv", text_field_0, text_field_1);
     }
     else if (category_label == "_Series")
     {
-        //Main_Frame::UpdateStatusBar(": " + std::filesystem::current_path().generic_string() + "/bookmark_record.csv");
         csv_maintainer_main(category_label + ".csv", text_field_0, text_field_1);
     }
     else if (category_label == "_Films")
     {
-        //Main_Frame::UpdateStatusBar(": " + std::filesystem::current_path().generic_string() + "/bookmark_record.csv");
         csv_maintainer_main(category_label + ".csv", text_field_0, text_field_1);
     }
     else if (category_label == "_Books")
     {
-        //Main_Frame::UpdateStatusBar(": " + std::filesystem::current_path().generic_string() + "/bookmark_record.csv");
         csv_maintainer_main(category_label + ".csv", text_field_0, text_field_1);
     }
     else if (category_label == "_Art")
     {
-        //Main_Frame::UpdateStatusBar(": " + std::filesystem::current_path().generic_string() + "/bookmark_record.csv");
         csv_maintainer_main(category_label + ".csv", text_field_0, text_field_1);
     }
     else if (category_label == "_A")
     {
-        Main_Frame::UpdateStatusBar(": " + std::filesystem::current_path().generic_string() + "/" + category_label + ".csv");
         csv_maintainer_main(category_label + ".csv", text_field_0, text_field_1);
     }
+    Main_Frame::UpdateStatusBar(": " + std::filesystem::current_path().generic_string() + "/" + category_label + ".csv");
     wxLogMessage("Inserted: " + text_field_1 + " into: " + category_combo_box->GetValue());
 }
 
