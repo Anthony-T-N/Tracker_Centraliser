@@ -84,6 +84,9 @@ void sort_record_dates(std::string csv_file_name)
     std::ofstream output_file;
     output_file.open(root_folder_name + "/" + "temp_record.csv");
 
+    std::ofstream sorted_file;
+    sorted_file.open(root_folder_name + "/" + "temp_sorted_file_record.csv");
+
     std::string input_file_line;
     int line_counter = 0;
     while (std::getline(input_file, input_file_line))
@@ -102,7 +105,6 @@ void sort_record_dates(std::string csv_file_name)
     while (std::getline(input_file, input_file_line))
     {
         line_counter++;
-
         input_file_line_vec.push_back(input_file_line);
         output_file << input_file_line << "\n";
         /*
@@ -134,12 +136,13 @@ void sort_record_dates(std::string csv_file_name)
     for (int i = 0; i < (input_file_line_vec.size()); i++)
     {
         wxLogMessage(input_file_line_vec[i].c_str());
+        sorted_file << input_file_line_vec[i] << "\n";
     }
     input_file.close();
     output_file.close();
-    std::string test = root_folder_name + "/" + csv_file_name;
+    std::string file_to_remove = root_folder_name + "/" + csv_file_name;
     // https://stackoverflow.com/questions/6674611/deleting-a-file-with-string-in-the-arguments
-    if (remove(test.c_str()) == 0)
+    if (remove(file_to_remove.c_str()) == 0)
     {
         wxLogMessage("[+] Filename deleted successfully");
         wxLogMessage("\"bookmark_record.csv\" deleted");
