@@ -31,11 +31,9 @@ void root_folder_creation(std::string root_folder_name, std::string csv_file_nam
     std::ofstream output_file;
     if (std::filesystem::exists(root_folder_name + "/" + csv_file_name) == false)
     {
-        wxString temp_log_message = "[-] " + root_folder_name + "/" + csv_file_name + " does not exist";
-        wxLogMessage(temp_log_message);
+        wxLogMessage(("[-] " + root_folder_name + "/" + csv_file_name + " does not exist").c_str());
         output_file.open(root_folder_name + "/" + csv_file_name);
-        temp_log_message = root_folder_name + "/" + csv_file_name;
-        wxLogMessage("[+] Created " + temp_log_message + " successfully;");
+        wxLogMessage(("[+] Created " + root_folder_name + "/" + csv_file_name + " successfully;").c_str());
         output_file.close();
     }
 }
@@ -52,8 +50,7 @@ int write_to_csv(std::string root_folder_name, std::string csv_file_name, std::s
         wxLogMessage("[+] Opened bookmark_record.csv successfully;");
         output_file << "Date" << "," << "Current Total" << "\n";
         wxLogMessage("[+] Adding new entry: ");
-        const wxString& msg = current_date + " | " + message;
-        wxLogMessage(msg);
+        wxLogMessage((current_date + " | " + message).c_str());
         output_file << current_date << "," << message << "\n";
         temp_report_c.push_back(current_date + "," + message);
         output_file.close();
@@ -64,8 +61,7 @@ int write_to_csv(std::string root_folder_name, std::string csv_file_name, std::s
         // std::ios::app informs program to append and not to overwrite.
         output_file.open(root_folder_name + "/" + csv_file_name, std::ios::app);
         wxLogMessage("[+] Opened bookmark_record.csv successfully;");
-        const wxString& msg = "[+] Adding new entry: \n" + current_date + " | " + message;
-        wxLogMessage(msg);
+        wxLogMessage(("[+] Adding new entry: \n" + current_date + " | " + message).c_str());
         output_file << current_date << "," << message << "\n";
         temp_report_c.push_back(current_date + "," + message);
         output_file.close();
@@ -124,8 +120,7 @@ void sort_record_dates(std::string csv_file_name)
             primary_line.erase(std::remove(primary_line.begin(), primary_line.end(), '-'), primary_line.end());
             std::string secondary_line = input_file_line_vec[j].substr(0, input_file_line_vec[j].find(","));
             secondary_line.erase(std::remove(secondary_line.begin(), secondary_line.end(), '-'), secondary_line.end());
-            std::string full_test = primary_line + " > " + secondary_line;
-            wxLogMessage(full_test.c_str());
+            wxLogMessage((primary_line + " > " + secondary_line).c_str());
             if (primary_line > secondary_line)
             {
                 std::swap(input_file_line_vec[i], input_file_line_vec[j]);
