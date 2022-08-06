@@ -23,10 +23,16 @@
 
 void root_folder_creation(std::string root_folder_name, std::string csv_file_name)
 {
+    // Detect duplicate root folders ?
     if (std::filesystem::exists(root_folder_name) == false)
     {
         wxLogMessage("[-] _Tracking_Centraliser_Root_Folder does not exist;");
         std::filesystem::create_directories(root_folder_name);
+    }
+    if (std::filesystem::exists(root_folder_name + "/" + "_Backup_Record_Folder") == false)
+    {
+        wxLogMessage("[-] _Tracking_Centraliser_Root_Folder Backup Folder does not exist;");
+        std::filesystem::create_directories(root_folder_name + "/" + "_Backup_Record_Folder");
     }
     std::ofstream output_file;
     if (std::filesystem::exists(root_folder_name + "/" + csv_file_name) == false)
@@ -71,17 +77,22 @@ int write_to_csv(std::string root_folder_name, std::string csv_file_name, std::s
 
 void sort_record_dates(std::string csv_file_name)
 {
+    // WARNING: FUNCTION BREAKS WHEN FILE HAS NO CONTENT. FIX ASAP
+
     std::string root_folder_name("_Tracking_Centraliser_Root_Folder");
     root_folder_creation(root_folder_name, csv_file_name);
 
     std::ifstream input_file;
     input_file.open(root_folder_name + "/" + csv_file_name);
 
-    std::ofstream output_file;
-    output_file.open(root_folder_name + "/" + "temp_record.csv");
+    std::ofstream output_temp_file;
+    output_temp_file.open(root_folder_name + "/" + "temp_record.csv");
 
-    std::ofstream sorted_file;
-    sorted_file.open(root_folder_name + "/" + "temp_sorted_file_record.csv");
+    std::ofstream output_backup_file;
+    output_backup_file.open(root_folder_name + "/" + "_Backup_Record_Folder" + "/" + csv_file_name + "_BAK_record.csv");
+
+    std::ofstream output_sorted_file;
+    output_sorted_file.open(root_folder_name + "/" + "temp_sorted_file_record.csv");
 
     std::string input_file_line;
     int line_counter = 0;
@@ -102,7 +113,8 @@ void sort_record_dates(std::string csv_file_name)
     {
         line_counter++;
         input_file_line_vec.push_back(input_file_line);
-        output_file << input_file_line << "\n";
+        output_temp_file << input_file_line << "\n";
+        output_backup_file << input_file_line << "\n";
         /*
         if (last_line == line_counter)
         {
@@ -127,14 +139,15 @@ void sort_record_dates(std::string csv_file_name)
             }
         }
     }
-    wxLogMessage("BREAK");
     for (int i = 0; i < (input_file_line_vec.size()); i++)
     {
         wxLogMessage(input_file_line_vec[i].c_str());
-        sorted_file << input_file_line_vec[i] << "\n";
+        output_sorted_file << input_file_line_vec[i] << "\n";
     }
     input_file.close();
-    output_file.close();
+    output_temp_file.close();
+    output_sorted_file.close();
+    output_backup_file.close();
     std::string file_to_remove = root_folder_name + "/" + csv_file_name;
     // https://stackoverflow.com/questions/6674611/deleting-a-file-with-string-in-the-arguments
     if (remove(file_to_remove.c_str()) == 0)
