@@ -89,7 +89,7 @@ void sort_record_dates(std::string csv_file_name)
     output_temp_file.open(root_folder_name + "/" + "temp_record.csv");
 
     std::ofstream output_backup_file;
-    output_backup_file.open(root_folder_name + "/" + "_Backup_Record_Folder" + "/" + csv_file_name + "_BAK_record.csv");
+    output_backup_file.open(root_folder_name + "/" + "_Backup_Record_Folder" + "/" + csv_file_name + "_BAK");
 
     std::ofstream output_sorted_file;
     output_sorted_file.open(root_folder_name + "/" + "temp_sorted_file_record.csv");
@@ -153,7 +153,7 @@ void sort_record_dates(std::string csv_file_name)
     if (remove(file_to_remove.c_str()) == 0)
     {
         wxLogMessage("[+] Filename deleted successfully");
-        wxLogMessage("\"bookmark_record.csv\" deleted");
+        wxLogMessage((csv_file_name + " deleted").c_str());
     }
     else
     {
@@ -163,12 +163,12 @@ void sort_record_dates(std::string csv_file_name)
     if (!value)
     {
         wxLogMessage("[+] Filename renamed successfully");
-        wxLogMessage("temp_record.csv > bookmark_record.csv");
+        wxLogMessage(("temp_record.csv > " + csv_file_name).c_str());
     }
     else
     {
         wxLogMessage("[-] Error with filename change");
-        wxLogMessage("temp_record.csv !> bookmark_record.csv");
+        wxLogMessage(("temp_record.csv > " + csv_file_name).c_str());
     }
 }
 
