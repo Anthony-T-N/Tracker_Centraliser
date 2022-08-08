@@ -79,6 +79,7 @@ void sort_record_dates(std::string csv_file_name)
 {
     // WARNING: FUNCTION BREAKS WHEN FILE HAS NO CONTENT. FIX ASAP
 
+    // Remove once testing is completed.
     std::string root_folder_name("_Tracking_Centraliser_Root_Folder");
     root_folder_creation(root_folder_name, csv_file_name);
 
@@ -86,7 +87,17 @@ void sort_record_dates(std::string csv_file_name)
     input_file.open(root_folder_name + "/" + csv_file_name);
 
     std::ofstream output_temp_file;
-    output_temp_file.open(root_folder_name + "/" + "temp_record.csv");
+    if (std::filesystem::exists(root_folder_name + "/" + "temp_record.csv") != false)
+    {
+        wxLogError("[!] Error: temp_record.csv already exist. Unable to sort csv file;");
+        input_file.close();
+        output_temp_file.close();
+        return;
+    }
+    else
+    {
+        output_temp_file.open(root_folder_name + "/" + "temp_record.csv");
+    }
 
     std::ofstream output_backup_file;
     output_backup_file.open(root_folder_name + "/" + "_Backup_Record_Folder" + "/" + csv_file_name + "_BAK");
@@ -95,10 +106,10 @@ void sort_record_dates(std::string csv_file_name)
     output_sorted_file.open(root_folder_name + "/" + "temp_sorted_file_record.csv");
 
     std::string input_file_line;
-    int line_counter = 0;
+    int line_count = 0;
     while (std::getline(input_file, input_file_line))
     {
-        line_counter++;
+        line_count++;
     }
 
     // https://forums.codeguru.com/showthread.php?320724-how-to-reset-quot-getline(File-string)-quot
@@ -107,16 +118,16 @@ void sort_record_dates(std::string csv_file_name)
 
     std::vector<std::string> input_file_line_vec;
 
-    int last_line = line_counter - 1;
-    line_counter = 0;
+    int last_line = line_count - 1;
+    line_count = 0;
     while (std::getline(input_file, input_file_line))
     {
-        line_counter++;
+        line_count++;
         input_file_line_vec.push_back(input_file_line);
         output_temp_file << input_file_line << "\n";
         output_backup_file << input_file_line << "\n";
         /*
-        if (last_line == line_counter)
+        if (last_line == line_count)
         {
             wxLogMessage("[!] Skip last line;");
             break;
@@ -139,10 +150,16 @@ void sort_record_dates(std::string csv_file_name)
             }
         }
     }
+    int sorted_line_count = 1;
     for (int i = 0; i < (input_file_line_vec.size()); i++)
     {
         wxLogMessage(input_file_line_vec[i].c_str());
         output_sorted_file << input_file_line_vec[i] << "\n";
+        sorted_line_count++;
+    }
+    if (line_count != sorted_line_count)
+    {
+        wxLogError("[-] Line count mismatch between original file and sorted file");
     }
     input_file.close();
     output_temp_file.close();
@@ -157,7 +174,7 @@ void sort_record_dates(std::string csv_file_name)
     }
     else
     {
-        wxLogMessage("[-] Error with deletion");
+        wxLogError("[-] Error with deletion");
     }
     int value = std::rename((root_folder_name + "/" + "temp_record.csv").c_str(), (root_folder_name + "/" + csv_file_name).c_str());
     if (!value)
@@ -167,8 +184,8 @@ void sort_record_dates(std::string csv_file_name)
     }
     else
     {
-        wxLogMessage("[-] Error with filename change");
-        wxLogMessage(("temp_record.csv > " + csv_file_name).c_str());
+        wxLogError("[-] Error with filename change");
+        wxLogError(("temp_record.csv > " + csv_file_name).c_str());
     }
 }
 
@@ -177,5 +194,6 @@ int csv_maintainer_main(std::string csv_file_name, std::string date, std::string
     std::string root_folder_name("_Tracking_Centraliser_Root_Folder");
     root_folder_creation(root_folder_name, csv_file_name);
     write_to_csv(root_folder_name, csv_file_name, date, message);
+    //sort_record_dates(csv_file_name);
     return 0;
 }
