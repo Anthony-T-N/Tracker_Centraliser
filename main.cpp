@@ -181,6 +181,8 @@ void Main_Frame::OnInsert(wxCommandEvent& event)
 
 void Main_Frame::insert_to_csv(std::string category_label, std::string text_field_0, std::string text_field_1)
 {
+    //TO-DO Date validator
+
     if (text_field_0.empty() || text_field_1.empty())
     {
         wxLogError("[-] Invalid input - Empty Field");
@@ -244,7 +246,6 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_fiel
     else if (category_label == "_Record_Sort_Debug")
     {
         csv_maintainer_main(category_label + ".csv", text_field_0, text_field_1);
-        sort_record_dates("_Record_Sort_Debug.csv");
     }
     Main_Frame::UpdateStatusBar(": " + std::filesystem::current_path().generic_string() + "/" + category_label + ".csv");
     wxLogMessage("Inserted: " + text_field_1 + " into: " + category_combo_box->GetValue());
@@ -369,7 +370,7 @@ Brief : Centralise tracking of a number of activities.
 [-] Fixed minimum window size ^ Maximum size
 [+] Dark background + White Text
 [-] Change colour when Unfocused
-[In Progress] Organise entries by date.
-[In Progress] Record Intergity Check 
+[+] Organise entries by date.
+[+] Record Intergity Check 
 
 */
