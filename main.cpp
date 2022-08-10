@@ -119,6 +119,10 @@ Main_Frame::Main_Frame()
     category_item_arr.Add(wxT("_A"));
     category_item_arr.Add(wxT("_Record_Sort_Debug"));
 
+    wxCheckBox* m_checkbox;
+    m_checkbox = new wxCheckBox();
+    m_checkbox->SetValue(false);
+
     wxStaticText* date_label = new wxStaticText(panel, -1, wxT("Current_Date:"));
     date_label->SetForegroundColour(wxColour(255,255,255));
     category_label = new wxStaticText(panel, -1, wxT("Category:"));
@@ -139,11 +143,13 @@ Main_Frame::Main_Frame()
     fgs->Add(date_label);
     fgs->Add(text_field_0, 1, wxEXPAND);
     fgs->Add(category_label);
+    //fgs->Add(m_checkbox);
     fgs->Add(category_combo_box, 1, wxEXPAND);
     fgs->Add(record_label);
     fgs->Add(text_field_1, 1, wxEXPAND);
     fgs->Add(review_label, 1, wxEXPAND);
     fgs->Add(insert_button);
+    //fgs->Add(m_checkbox);
 
     Bind(wxEVT_BUTTON, &Main_Frame::OnInsert, this, BUTTON_Insert);
 
@@ -164,6 +170,13 @@ void Main_Frame::UpdateStatusBar(wxString message)
     //bar->SetForegroundColour(wxColour(color));
     status_text_bar->SetStatusText(message, 0); //text in field 0
 }
+
+/*
+void Main_Frame::new_checkbox(wxCommandEvent& event)
+{
+    status_text_bar->SetStatusText(message, 0); //text in field 0
+}
+*/
 
 void Main_Frame::OnInsert(wxCommandEvent& event)
 {
@@ -218,32 +231,11 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_fiel
         }
         csv_maintainer_main("_Exercise.csv", text_field_0, text_field_1);
     }
-    // BAD: Remove please
-    else if (category_label == "_Events")
-    {
-        csv_maintainer_main(category_label + ".csv", text_field_0, text_field_1);
-    }
-    else if (category_label == "_Series")
-    {
-        csv_maintainer_main(category_label + ".csv", text_field_0, text_field_1);
-    }
-    else if (category_label == "_Films")
-    {
-        csv_maintainer_main(category_label + ".csv", text_field_0, text_field_1);
-    }
-    else if (category_label == "_Books")
-    {
-        csv_maintainer_main(category_label + ".csv", text_field_0, text_field_1);
-    }
-    else if (category_label == "_Art")
-    {
-        csv_maintainer_main(category_label + ".csv", text_field_0, text_field_1);
-    }
-    else if (category_label == "_A")
-    {
-        csv_maintainer_main(category_label + ".csv", text_field_0, text_field_1);
-    }
     else if (category_label == "_Record_Sort_Debug")
+    {
+        csv_maintainer_main(category_label + ".csv", text_field_0, text_field_1);
+    }
+    else
     {
         csv_maintainer_main(category_label + ".csv", text_field_0, text_field_1);
     }
