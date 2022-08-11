@@ -201,6 +201,13 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_fiel
         wxLogError("[-] Invalid input - Empty Field");
         return;
     }
+    if (text_field_0.find('-') == std::string::npos)
+    {
+        "YYYY-mm-dd";
+        wxLogError("[-] Invalid input - Invalid Date");
+        return;
+    }
+
     // Removing new lines from inputted text.
     text_field_1.erase(std::remove(text_field_1.begin(), text_field_1.end(), '\n'), text_field_1.end());
     if (category_label == "_Critical_URLs")
