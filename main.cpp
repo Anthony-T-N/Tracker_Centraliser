@@ -194,20 +194,34 @@ void Main_Frame::OnInsert(wxCommandEvent& event)
 
 void Main_Frame::insert_to_csv(std::string category_label, std::string text_field_0, std::string text_field_1)
 {
-    //TO-DO Date validator
-
     if (text_field_0.empty() || text_field_1.empty())
     {
         wxLogError("[-] Invalid input - Empty Field");
         return;
     }
-    if (text_field_0.find('-') == std::string::npos)
+    //Date validator
+    if (text_field_0[4] == '-' && text_field_0[7] == '-')
     {
+        for (int i = 0; i <= text_field_0.size(); i++)
+        {
+            if (i != 4 || i != 7)
+            {
+                if (!isdigit(text_field_0[i]))
+                {
+                    wxLogError("[-] Invalid input - Non-digital detected");
+                    break;
+                }
+            }
+        }
         "YYYY-mm-dd";
         wxLogError("[-] Invalid input - Invalid Date");
         return;
     }
-
+    else
+    {
+        wxLogError("[-] Invalid input - Invalid Date");
+        return;
+    }
     // Removing new lines from inputted text.
     text_field_1.erase(std::remove(text_field_1.begin(), text_field_1.end(), '\n'), text_field_1.end());
     if (category_label == "_Critical_URLs")
