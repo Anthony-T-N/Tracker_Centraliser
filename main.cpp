@@ -106,18 +106,14 @@ Main_Frame::Main_Frame()
 
     wxArrayString category_item_arr;
 
-    // Create common wxArrayString array
-    category_item_arr.Add(wxT("_Critical_URLs"));
-    category_item_arr.Add(wxT("_Sleep_Time"));
-    category_item_arr.Add(wxT("_Bookmark"));
-    category_item_arr.Add(wxT("_Exercise"));
-    category_item_arr.Add(wxT("_Events"));
-    category_item_arr.Add(wxT("_Series"));
-    category_item_arr.Add(wxT("_Films"));
-    category_item_arr.Add(wxT("_Books"));
-    category_item_arr.Add(wxT("_Art"));
-    category_item_arr.Add(wxT("_A"));
-    category_item_arr.Add(wxT("_Record_Sort_Debug"));
+    std::ifstream input_file;
+    std::string input_file_line;
+    input_file.open("_Tracking_Centraliser_Category_List.txt");
+    while (std::getline(input_file, input_file_line))
+    {
+        category_item_arr.Add(input_file_line);
+    }
+    input_file.close();
 
     wxCheckBox* m_checkbox;
     m_checkbox = new wxCheckBox();
@@ -199,7 +195,21 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_fiel
         wxLogError("[-] Invalid input - Empty Field");
         return;
     }
+    /*
+    std::vector<char> tmp_string(text_field_0.begin(), text_field_0.end());
+    OutputDebugStringA("DEBUG: ");
+    for (char i : tmp_string)
+        OutputDebugStringA(i + "");
+    wxLogWarning(std::to_string(tmp_string.size()).c_str());
+    wxLogWarning(std::to_string(tmp_string[2]).c_str());
+    for (int i = 0; i <= tmp_string.size() - 1; i++)
+    {
+        wxLogWarning(std::to_string(tmp_string[i]).c_str());
+        //wxLogError("" + tmp_string[i]);
+    }
+    wxLogError(std::to_string(tmp_string[4]).c_str());
     //Date validator
+    wxLogError(std::to_string(tmp_string[7]).c_str());
     if (text_field_0[4] == '-' && text_field_0[7] == '-')
     {
         for (int i = 0; i <= text_field_0.size(); i++)
@@ -209,6 +219,7 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_fiel
                 if (!isdigit(text_field_0[i]))
                 {
                     wxLogError("[-] Invalid input - Non-digital detected");
+                    wxLogError("" + text_field_0[i]);
                     break;
                 }
             }
@@ -222,6 +233,7 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_fiel
         wxLogError("[-] Invalid input - Invalid Date");
         return;
     }
+    */
     // Removing new lines from inputted text.
     text_field_1.erase(std::remove(text_field_1.begin(), text_field_1.end(), '\n'), text_field_1.end());
     if (category_label == "_Critical_URLs")
