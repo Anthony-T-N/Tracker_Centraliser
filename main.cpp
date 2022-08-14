@@ -106,6 +106,8 @@ Main_Frame::Main_Frame()
 
     wxArrayString category_item_arr;
 
+    // TO-DO: Read through existing CSV files and add to primary file list name.
+    // No overwriting
     std::ifstream input_file;
     std::string input_file_line;
     input_file.open("_Tracking_Centraliser_Category_List.txt");
@@ -129,7 +131,7 @@ Main_Frame::Main_Frame()
     review_label->SetForegroundColour(wxColour(255, 255, 255));
 
     text_field_0 = new wxTextCtrl(panel, -1, get_current_date());
-    category_combo_box = new wxComboBox(panel, ID_COMBOBOX1, wxEmptyString, wxDefaultPosition, wxDefaultSize, category_item_arr, wxCB_READONLY, wxDefaultValidator, _T("ID_COMBOBOX1"));
+    category_combo_box = new wxComboBox(panel, ID_COMBOBOX1, wxEmptyString, wxDefaultPosition, wxDefaultSize, category_item_arr, wxCB_DROPDOWN, wxDefaultValidator, _T("ID_COMBOBOX1"));
     text_field_1 = new wxTextCtrl(panel, -1, wxT(""),
         wxPoint(-1, -1), wxSize(-1, -1), wxTE_MULTILINE);
 
@@ -174,29 +176,81 @@ void Main_Frame::new_checkbox(wxCommandEvent& event)
 }
 */
 
-void Main_Frame::OnInsert(wxCommandEvent& event)
+void debugging_function(std::string category_label, std::string text_field_0, std::string text_field_1)
 {
-    if (category_combo_box->GetValue().ToStdString() == "")
-    {
-        wxLogWarning("[-] Missing Category");
-    }
-    else
-    {
-        //category_label->SetLabel("new value"); Example to change label.
-        insert_to_csv(category_combo_box->GetValue().ToStdString(), text_field_0->GetValue().ToStdString(), text_field_1->GetValue().ToStdString());
-        //wxLogMessage("Inserted: " + text_field_1->GetValue() + " into: " + category_combo_box->GetValue());
-    }
-}
+    wxLogDebug("===LABELS===");
+    wxLogDebug(category_label.c_str());
+    wxLogDebug(text_field_0.c_str());
+    wxLogDebug(text_field_1.c_str());
+    wxLogDebug("===LABELS===");
+    std::string test1 = text_field_0;
+    test1 += "\0";
+    test1 = test1.c_str();
+    OutputDebugStringA("============================================================!");
+    OutputDebugStringA(" ");
+    OutputDebugStringA(test1.c_str());
+    OutputDebugStringA(" ");
+    size_t sizer = 0;
+    OutputDebugStringA("" + test1[sizer]);
+    OutputDebugStringA(" ");
+    OutputDebugStringA("" + test1[3]);
+    OutputDebugStringA("============================================================!");
 
-void Main_Frame::insert_to_csv(std::string category_label, std::string text_field_0, std::string text_field_1)
-{
-    if (text_field_0.empty() || text_field_1.empty())
+    std::vector<char> tmp_string(test1.begin(), test1.end());
+    tmp_string.push_back('\0');
+    OutputDebugStringA("DEBUG: ");
+    for (char i : tmp_string)
+        OutputDebugStringA(i + "");
+    wxLogDebug(std::to_string(tmp_string.size()).c_str());
+    wxLogDebug(std::to_string(tmp_string[2]).c_str());
+    for (int i = 0; i <= tmp_string.size() - 1; i++)
     {
-        wxLogError("[-] Invalid input - Empty Field");
-        return;
+        //wxLogWarning(std::to_string(tmp_string[i]).c_str());
+        wxLogDebug("" + tmp_string[i]);
     }
+    wxLogDebug(std::to_string(tmp_string[4]).c_str());
+    OutputDebugStringA("============================END=============================!");
+    std::string frienda(category_label);
+    //std::string frienda = category_label;
+    frienda = frienda + '\0';
+    category_label = category_label + '\0';
+    OutputDebugStringA("============================================================!");
+    OutputDebugStringA("" + frienda[0]);
+    OutputDebugStringA("" + frienda[1]);
+    OutputDebugStringA("" + frienda[2]);
+    OutputDebugStringA("" + frienda[3]);
     /*
-    std::vector<char> tmp_string(text_field_0.begin(), text_field_0.end());
+    std::vector<char> illegal = { '<', '>', ':', '"', '/', '\\', '|', '?', '*' };
+    for (int i = 0; i <= frienda.size(); i++)
+    {
+        wxLogError("" + frienda[i]);
+    }
+    */
+    /*
+    if (text_field_1.find('<') != std::string::npos || text_field_1.find('>') != std::string::npos || text_field_1.find('>') != std::string::npos)
+    {
+
+    }
+    */
+    // Issue: Unable to convert to print chars/strings without strange characters.
+    /*
+    std::string test(text_field_0);
+    //sprintf(msgbuf, "My variable is %d\n", test);
+    std::wstring stemp = std::wstring(test.begin(), test.end());
+    LPCWSTR sw = stemp.c_str();
+    OutputDebugStringA("DEBUG: ");
+    OutputDebugString(sw);
+    //OutputDebugStringA(sw[4]);
+
+    char* fchar = new char[test.size() + 1];
+    std::strncpy(fchar, test.c_str(), test.size() + 1);
+    fchar[10] = '\0';
+    OutputDebugStringA("DEBUG: ");
+    //OutputDebugString(fchar + "");
+
+    test = test.c_str();
+    std::vector<char> tmp_string(test.begin(), test.end());
+    tmp_string.push_back('\0');
     OutputDebugStringA("DEBUG: ");
     for (char i : tmp_string)
         OutputDebugStringA(i + "");
@@ -208,8 +262,25 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_fiel
         //wxLogError("" + tmp_string[i]);
     }
     wxLogError(std::to_string(tmp_string[4]).c_str());
-    //Date validator
     wxLogError(std::to_string(tmp_string[7]).c_str());
+    */
+}
+
+void Main_Frame::OnInsert(wxCommandEvent& event)
+{
+    debugging_function(category_combo_box->GetValue().ToStdString(), text_field_0->GetValue().ToStdString(), text_field_1->GetValue().ToStdString());
+    //category_label->SetLabel("new value"); Example to change label.
+    //insert_to_csv(category_combo_box->GetValue().ToStdString(), text_field_0->GetValue().ToStdString(), text_field_1->GetValue().ToStdString());
+}
+
+void Main_Frame::insert_to_csv(std::string category_label, std::string text_field_0, std::string text_field_1)
+{
+    if (category_label.empty() || text_field_0.empty() || text_field_1.empty())
+    {
+        wxLogError("[-] Invalid input - Empty Field");
+        return;
+    }
+    //Date validator
     if (text_field_0[4] == '-' && text_field_0[7] == '-')
     {
         for (int i = 0; i <= text_field_0.size(); i++)
@@ -228,12 +299,12 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_fiel
         wxLogError("[-] Invalid input - Invalid Date");
         return;
     }
+
     else
     {
         wxLogError("[-] Invalid input - Invalid Date");
         return;
     }
-    */
     // Removing new lines from inputted text.
     text_field_1.erase(std::remove(text_field_1.begin(), text_field_1.end(), '\n'), text_field_1.end());
     if (category_label == "_Critical_URLs")
@@ -275,6 +346,7 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_fiel
     Main_Frame::UpdateStatusBar(": " + std::filesystem::current_path().generic_string() + "/" + category_label + ".csv");
     wxLogMessage("Inserted: " + text_field_1 + " into: " + category_combo_box->GetValue());
 }
+
 
 /*
 int main()
