@@ -55,7 +55,7 @@ class Main_Frame : public wxFrame
         void OnExit(wxCommandEvent& event);
         void OnExercise(wxCommandEvent& event);
         void OnBookmark(wxCommandEvent& event);
-        void insert_to_csv(std::string category_label, std::string text_field_0, std::string text_field_1);
+        void insert_to_csv(std::string category_label, std::string text_date_field, std::string text_record_field);
         
 };
 
@@ -72,8 +72,8 @@ const int ID_COMBOBOX1 = 4;
 
 wxStaticText* category_label;
 wxComboBox* category_combo_box;
-wxTextCtrl* text_field_0;
-wxTextCtrl* text_field_1;
+wxTextCtrl* text_date_field;
+wxTextCtrl* text_record_field;
 
 bool Main_Application::OnInit()
 {
@@ -117,10 +117,6 @@ Main_Frame::Main_Frame()
     }
     input_file.close();
 
-    wxCheckBox* m_checkbox;
-    m_checkbox = new wxCheckBox();
-    m_checkbox->SetValue(false);
-
     wxStaticText* date_label = new wxStaticText(panel, -1, wxT("Current_Date:"));
     date_label->SetForegroundColour(wxColour(255,255,255));
     category_label = new wxStaticText(panel, -1, wxT("Category:"));
@@ -130,24 +126,22 @@ Main_Frame::Main_Frame()
     wxStaticText* review_label = new wxStaticText(panel, -1, wxT("Review:"));
     review_label->SetForegroundColour(wxColour(255, 255, 255));
 
-    text_field_0 = new wxTextCtrl(panel, -1, get_current_date());
+    text_date_field = new wxTextCtrl(panel, -1, get_current_date());
     category_combo_box = new wxComboBox(panel, ID_COMBOBOX1, wxEmptyString, wxDefaultPosition, wxDefaultSize, category_item_arr, wxCB_DROPDOWN, wxDefaultValidator, _T("ID_COMBOBOX1"));
-    text_field_1 = new wxTextCtrl(panel, -1, wxT(""),
+    text_record_field = new wxTextCtrl(panel, -1, wxT(""),
         wxPoint(-1, -1), wxSize(-1, -1), wxTE_MULTILINE);
 
     wxButton* insert_button = new wxButton(panel, BUTTON_Insert, _T("INSERT"),
         wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_VERTICAL);
 
     fgs->Add(date_label);
-    fgs->Add(text_field_0, 1, wxEXPAND);
+    fgs->Add(text_date_field, 1, wxEXPAND);
     fgs->Add(category_label);
-    //fgs->Add(m_checkbox);
     fgs->Add(category_combo_box, 1, wxEXPAND);
     fgs->Add(record_label);
-    fgs->Add(text_field_1, 1, wxEXPAND);
+    fgs->Add(text_record_field, 1, wxEXPAND);
     fgs->Add(review_label, 1, wxEXPAND);
     fgs->Add(insert_button);
-    //fgs->Add(m_checkbox);
 
     Bind(wxEVT_BUTTON, &Main_Frame::OnInsert, this, BUTTON_Insert);
 
@@ -169,21 +163,14 @@ void Main_Frame::UpdateStatusBar(wxString message)
     status_text_bar->SetStatusText(message, 0); //text in field 0
 }
 
-/*
-void Main_Frame::new_checkbox(wxCommandEvent& event)
-{
-    status_text_bar->SetStatusText(message, 0); //text in field 0
-}
-*/
-
-void debugging_function(std::string category_label, std::string text_field_0, std::string text_field_1)
+void debugging_function(std::string category_label, std::string text_date_field, std::string text_record_field)
 {
     wxLogDebug("===LABELS===");
     wxLogDebug(category_label.c_str());
-    wxLogDebug(text_field_0.c_str());
-    wxLogDebug(text_field_1.c_str());
+    wxLogDebug(text_date_field.c_str());
+    wxLogDebug(text_record_field.c_str());
     wxLogDebug("===LABELS===");
-    std::string test1 = text_field_0;
+    std::string test1 = text_date_field;
     test1 += "\0";
     test1 = test1.c_str();
     OutputDebugStringA("============================================================!");
@@ -227,14 +214,14 @@ void debugging_function(std::string category_label, std::string text_field_0, st
     }
     */
     /*
-    if (text_field_1.find('<') != std::string::npos || text_field_1.find('>') != std::string::npos || text_field_1.find('>') != std::string::npos)
+    if (text_record_field.find('<') != std::string::npos || text_record_field.find('>') != std::string::npos || text_record_field.find('>') != std::string::npos)
     {
 
     }
     */
     // Issue: Unable to convert to print chars/strings without strange characters.
     /*
-    std::string test(text_field_0);
+    std::string test(text_date_field);
     //sprintf(msgbuf, "My variable is %d\n", test);
     std::wstring stemp = std::wstring(test.begin(), test.end());
     LPCWSTR sw = stemp.c_str();
@@ -268,29 +255,30 @@ void debugging_function(std::string category_label, std::string text_field_0, st
 
 void Main_Frame::OnInsert(wxCommandEvent& event)
 {
-    debugging_function(category_combo_box->GetValue().ToStdString(), text_field_0->GetValue().ToStdString(), text_field_1->GetValue().ToStdString());
+    //debugging_function(category_combo_box->GetValue().ToStdString(), text_date_field->GetValue().ToStdString(), text_record_field->GetValue().ToStdString());
     //category_label->SetLabel("new value"); Example to change label.
-    //insert_to_csv(category_combo_box->GetValue().ToStdString(), text_field_0->GetValue().ToStdString(), text_field_1->GetValue().ToStdString());
+    insert_to_csv(category_combo_box->GetValue().ToStdString(), text_date_field->GetValue().ToStdString(), text_record_field->GetValue().ToStdString());
 }
 
-void Main_Frame::insert_to_csv(std::string category_label, std::string text_field_0, std::string text_field_1)
+void Main_Frame::insert_to_csv(std::string category_label, std::string text_date_field, std::string text_record_field)
 {
-    if (category_label.empty() || text_field_0.empty() || text_field_1.empty())
+    if (category_label.empty() || text_date_field.empty() || text_record_field.empty())
     {
         wxLogError("[-] Invalid input - Empty Field");
         return;
     }
+    /*
     //Date validator
-    if (text_field_0[4] == '-' && text_field_0[7] == '-')
+    if (text_date_field[4] == '-' && text_date_field[7] == '-')
     {
-        for (int i = 0; i <= text_field_0.size(); i++)
+        for (int i = 0; i <= text_date_field.size(); i++)
         {
             if (i != 4 || i != 7)
             {
-                if (!isdigit(text_field_0[i]))
+                if (!isdigit(text_date_field[i]))
                 {
                     wxLogError("[-] Invalid input - Non-digital detected");
-                    wxLogError("" + text_field_0[i]);
+                    wxLogError("" + text_date_field[i]);
                     break;
                 }
             }
@@ -299,54 +287,49 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_fiel
         wxLogError("[-] Invalid input - Invalid Date");
         return;
     }
-
+    
     else
     {
         wxLogError("[-] Invalid input - Invalid Date");
         return;
     }
+    */
     // Removing new lines from inputted text.
-    text_field_1.erase(std::remove(text_field_1.begin(), text_field_1.end(), '\n'), text_field_1.end());
+    text_record_field.erase(std::remove(text_record_field.begin(), text_record_field.end(), '\n'), text_record_field.end());
     if (category_label == "_Critical_URLs")
     {
-        csv_maintainer_main("_Critical_URLs.csv", text_field_0, text_field_1);
-    }
-    else if (category_label == "_Sleep_Time")
-    {
-        csv_maintainer_main(category_label + ".csv", text_field_0, text_field_1);
+        csv_maintainer_main("_Critical_URLs.csv", text_date_field, text_record_field);
     }
     else if (category_label == "_Bookmark")
     {
         // Note: Fails to validate very large numbers (Above 2147483647 to be exact).
-        if (text_field_1.find_first_not_of("0123456789") != std::string::npos || text_field_1.empty())
+        if (text_record_field.find_first_not_of("0123456789") != std::string::npos || text_record_field.empty())
         {
             wxLogError("[-] Invalid input - Please try again:");
             return;
         }
-        bookmark_counter_main(std::stoi(text_field_1));
-        Main_Frame::UpdateStatusBar(": " + std::filesystem::current_path().generic_string() + "/bookmark_record.csv");
+        bookmark_counter_main(std::stoi(text_record_field));
     }
     else if (category_label == "_Exercise")
     {
-        if (text_field_1.find_first_not_of("0123456789") != std::string::npos || text_field_1.empty())
+        if (text_record_field.find_first_not_of("0123456789") != std::string::npos || text_record_field.empty())
         {
             wxLogError("[-] Invalid input - Please try again:");
             return;
         }
-        csv_maintainer_main("_Exercise.csv", text_field_0, text_field_1);
+        csv_maintainer_main("_Exercise.csv", text_date_field, text_record_field);
     }
     else if (category_label == "_Record_Sort_Debug")
     {
-        csv_maintainer_main(category_label + ".csv", text_field_0, text_field_1);
+        csv_maintainer_main(category_label + ".csv", text_date_field, text_record_field);
     }
     else
     {
-        csv_maintainer_main(category_label + ".csv", text_field_0, text_field_1);
+        csv_maintainer_main(category_label + ".csv", text_date_field, text_record_field);
     }
-    Main_Frame::UpdateStatusBar(": " + std::filesystem::current_path().generic_string() + "/" + category_label + ".csv");
-    wxLogMessage("Inserted: " + text_field_1 + " into: " + category_combo_box->GetValue());
+    Main_Frame::UpdateStatusBar(": " + std::filesystem::current_path().generic_string() + "/" + "_Tracking_Centraliser_Root_Folder" + "/" + category_label + ".csv");
+    wxLogMessage("Inserted: [" + text_date_field + "] " + text_record_field + " to: " + category_combo_box->GetValue() + ".csv");
 }
-
 
 /*
 int main()
