@@ -6,21 +6,6 @@
 #include <wx/log.h>
 #include "Bookmark_Counter_h.h"
 
-// Create file -> Get date -> Add event/item -> Close
-
-/*
-   Date | Series Name
-   Date | Events
-   Date | URLS
-
-   Directory Tree:
-   .exe
-   -> Root_folder
-			-> file1.csv
-			-> file2.csv
-			-> file3.csv
-*/
-
 void root_folder_creation(std::string root_folder_name, std::string csv_file_name)
 {
     // Detect duplicate root folders ?
@@ -77,11 +62,7 @@ int write_to_csv(std::string root_folder_name, std::string csv_file_name, std::s
 
 void sort_record_dates(std::string csv_file_name)
 {
-    // WARNING: FUNCTION BREAKS WHEN FILE HAS NO CONTENT. FIX ASAP
-
-    // Remove once testing is completed.
     std::string root_folder_name("_Tracking_Centraliser_Root_Folder");
-    root_folder_creation(root_folder_name, csv_file_name);
 
     std::ifstream input_file;
     input_file.open(root_folder_name + "/" + csv_file_name);
@@ -102,11 +83,6 @@ void sort_record_dates(std::string csv_file_name)
     std::ofstream output_backup_file;
     output_backup_file.open(root_folder_name + "/" + "_Backup_Record_Folder" + "/" + csv_file_name + "_BAK");
 
-    /*
-    std::ofstream output_sorted_file;
-    output_sorted_file.open(root_folder_name + "/" + "temp_sorted_file_record.csv");
-    */
-
     std::string input_file_line;
     int line_count = 0;
     while (std::getline(input_file, input_file_line))
@@ -126,15 +102,7 @@ void sort_record_dates(std::string csv_file_name)
     {
         line_count++;
         input_file_line_vec.push_back(input_file_line);
-        //output_temp_file << input_file_line << "\n";
         output_backup_file << input_file_line << "\n";
-        /*
-        if (last_line == line_count)
-        {
-            wxLogMessage("[!] Skip last line;");
-            break;
-        }
-        */
     }
 
     for (int i = 0; i <= input_file_line_vec.size() - 1; i++)
@@ -169,7 +137,6 @@ void sort_record_dates(std::string csv_file_name)
     }
     input_file.close();
     output_temp_file.close();
-    //output_sorted_file.close();
     output_backup_file.close();
     std::string file_to_remove = root_folder_name + "/" + csv_file_name;
     // https://stackoverflow.com/questions/6674611/deleting-a-file-with-string-in-the-arguments
@@ -201,5 +168,43 @@ int csv_maintainer_main(std::string csv_file_name, std::string date, std::string
     root_folder_creation(root_folder_name, csv_file_name);
     write_to_csv(root_folder_name, csv_file_name, date, message);
     sort_record_dates(csv_file_name);
+
+    std::ifstream input_file;
+    input_file.open("_Tracking_Centraliser_Category_List.txt");
+    wxLogMessage(csv_file_name.substr(0, csv_file_name.find(".csv")).c_str());
+    bool csv_found = false;
+    std::string input_file_line;
+    while (std::getline(input_file, input_file_line))
+    {
+        if (csv_file_name.substr(0, csv_file_name.find(".csv")) == input_file_line)
+        {
+            csv_found = true;
+            break;
+        }
+    }
+    input_file.close();
+    if (csv_found == false)
+    {
+        std::ofstream output_file;
+        output_file.open("_Tracking_Centraliser_Category_List.txt", std::ios::app);
+        output_file << csv_file_name.substr(0, csv_file_name.find(".csv")) << "\n";
+        output_file.close();
+    }
     return 0;
 }
+
+// Create file -> Get date -> Add event/item -> Close
+
+/*
+   Date | Series Name
+   Date | Events
+   Date | URLS
+
+   Directory Tree:
+   .exe
+   -> _Tracking_Centraliser_Root_Folder
+            -> file1.csv
+            -> file2.csv
+            -> file3.csv
+                    -> _Backup_Record_Folder
+*/
