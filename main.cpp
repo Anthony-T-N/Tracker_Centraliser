@@ -75,6 +75,8 @@ wxComboBox* category_combo_box;
 wxTextCtrl* text_date_field;
 wxTextCtrl* text_record_field;
 
+wxArrayString category_item_arr;
+
 bool Main_Application::OnInit()
 {
     Main_Frame* fgs = new Main_Frame();
@@ -103,8 +105,6 @@ Main_Frame::Main_Frame()
     wxFlexGridSizer* fgs = new wxFlexGridSizer(4, 2, 9, 25);
 
     //SetMinSize(GetBestSize());
-
-    wxArrayString category_item_arr;
 
     // TO-DO: Read through existing CSV files and add to primary file list name.
     // No overwriting
@@ -329,6 +329,15 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_date
     }
     Main_Frame::UpdateStatusBar(": " + std::filesystem::current_path().generic_string() + "/" + "_Tracking_Centraliser_Root_Folder" + "/" + category_label + ".csv");
     wxLogMessage("Inserted: [" + text_date_field + "] " + text_record_field + " to: " + category_combo_box->GetValue() + ".csv");
+    
+    // "Dynamically" add items to dropdown list.
+    category_item_arr.Add(category_label);
+    category_combo_box->Set(category_item_arr);
+
+    for (const auto& entry : std::filesystem::directory_iterator(std::filesystem::current_path() + "_Tracking_Centraliser_Root_Folder"))
+        //dir_vector.push_back(entry.path());
+        wxLogMessage(entry.path().c_str());
+
 }
 
 /*
