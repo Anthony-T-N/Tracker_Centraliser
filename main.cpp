@@ -334,13 +334,13 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_date
     category_item_arr.Add(category_label);
     category_combo_box->Set(category_item_arr);
 
-    std::string path = std::filesystem::current_path().generic_string() + "\\_Tracking_Centraliser_Root_Folder\\";
+    /*
+    std::string path = std::filesystem::current_path().generic_string() + "/_Tracking_Centraliser_Root_Folder/";
     for (const auto& entry : std::filesystem::directory_iterator(path))
     {
-        //dir_vector.push_back(entry.path());
-        wxLogMessage(entry.path().c_str());
-        wxLogMessage((entry.path().generic_string().substr(0, entry.path().generic_string().find_last_of("\\"))).c_str());
+        wxLogMessage((entry.path().generic_string().substr(entry.path().generic_string().find_last_of("//") + 1)).c_str());
     }
+    */
 }
 
 /*
