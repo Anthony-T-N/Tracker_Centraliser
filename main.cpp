@@ -328,7 +328,7 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_date
         csv_maintainer_main(category_label + ".csv", text_date_field, text_record_field);
     }
     Main_Frame::UpdateStatusBar(": " + std::filesystem::current_path().generic_string() + "/" + "_Tracking_Centraliser_Root_Folder" + "/" + category_label + ".csv");
-    wxLogMessage("Inserted: [" + text_date_field + "] " + text_record_field + " to: " + category_combo_box->GetValue() + ".csv");
+    wxLogMessage("[+] Inserted: [" + text_date_field + "] " + text_record_field + " to: " + category_combo_box->GetValue() + ".csv");
     
     // "Dynamically" add items to dropdown list.
     category_item_arr.Add(category_label);
