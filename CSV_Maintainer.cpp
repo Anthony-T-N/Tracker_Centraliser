@@ -2,7 +2,6 @@
 #include <fstream>
 #include <filesystem>
 #include <string>
-#include <map>
 #include <wx/log.h>
 #include "Bookmark_Counter_h.h"
 
@@ -32,7 +31,7 @@ void root_folder_creation(std::string root_folder_name, std::string csv_file_nam
 int write_to_csv(std::string root_folder_name, std::string csv_file_name, std::string current_date, std::string message)
 {
     std::vector<std::string> temp_report_c = {};
-    // output file stream allows you to write contents to a file.
+    // Output file stream allows you to write contents to a file.
     std::ofstream output_file;
     if (std::filesystem::exists(root_folder_name + "/" + csv_file_name) == false)
     {
@@ -143,7 +142,7 @@ void sort_record_dates(std::string csv_file_name)
     if (remove(file_to_remove.c_str()) == 0)
     {
         wxLogMessage("[+] Filename deleted successfully");
-        wxLogMessage((csv_file_name + " deleted").c_str());
+        wxLogMessage(("[!] " + csv_file_name + " deleted").c_str());
     }
     else
     {
@@ -153,12 +152,12 @@ void sort_record_dates(std::string csv_file_name)
     if (!value)
     {
         wxLogMessage("[+] Filename renamed successfully");
-        wxLogMessage(("temp_record.csv > " + csv_file_name).c_str());
+        wxLogMessage(("[!] temp_record.csv > " + csv_file_name).c_str());
     }
     else
     {
         wxLogError("[-] Error with filename change");
-        wxLogError(("temp_record.csv > " + csv_file_name).c_str());
+        wxLogError(("[!] temp_record.csv > " + csv_file_name).c_str());
     }
 }
 
@@ -171,7 +170,7 @@ int csv_maintainer_main(std::string csv_file_name, std::string date, std::string
 
     std::ifstream input_file;
     input_file.open("_Tracking_Centraliser_Category_List.txt");
-    wxLogMessage(csv_file_name.substr(0, csv_file_name.find(".csv")).c_str());
+    //wxLogMessage(csv_file_name.substr(0, csv_file_name.find(".csv")).c_str());
     bool csv_found = false;
     std::string input_file_line;
     while (std::getline(input_file, input_file_line))
