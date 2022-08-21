@@ -165,23 +165,34 @@ void Main_Frame::UpdateStatusBar(wxString message)
 
 void debugging_function(std::string category_label, std::string text_date_field, std::string text_record_field)
 {
-    wxLogDebug("===LABELS===");
+    wxLogDebug("<===================LABELS===================>");
     wxLogDebug(category_label.c_str());
     wxLogDebug(text_date_field.c_str());
     wxLogDebug(text_record_field.c_str());
-    wxLogDebug("===LABELS===");
+    wxLogDebug("<===================LABELS===================>\n");
     std::string test1 = text_date_field;
-    test1 += "\0";
-    test1 = test1.c_str();
-    OutputDebugStringA("============================================================!");
-    OutputDebugStringA(" ");
+    //test1 += '\0';
+    //test1 = test1.c_str();
+
+    char src[40];
+    char dest[100];
+
+    memset(dest, '\0', sizeof(dest));
+    strcpy(src, test1.c_str());
+    strcpy(dest, src);
+
+    wxLogDebug("Final copied string : %s\n", dest);
+    OutputDebugStringA(" " + dest[1] + '\n');
+
+    OutputDebugStringA("\n============================================================END\n");
     OutputDebugStringA(test1.c_str());
-    OutputDebugStringA(" ");
     size_t sizer = 0;
-    OutputDebugStringA("" + test1[sizer]);
+    OutputDebugStringA("" + test1[sizer] + '\n');
     OutputDebugStringA(" ");
-    OutputDebugStringA("" + test1[3]);
-    OutputDebugStringA("============================================================!");
+    OutputDebugStringA(" " + test1[1] + '\n');
+    OutputDebugStringA(" " + test1[2] + '\n');
+    OutputDebugStringA(" " + test1[3] + '\n');
+    OutputDebugStringA("\n============================================================END\n");
 
     std::vector<char> tmp_string(test1.begin(), test1.end());
     tmp_string.push_back('\0');
@@ -196,12 +207,12 @@ void debugging_function(std::string category_label, std::string text_date_field,
         wxLogDebug("" + tmp_string[i]);
     }
     wxLogDebug(std::to_string(tmp_string[4]).c_str());
-    OutputDebugStringA("============================END=============================!");
+    OutputDebugStringA("\n============================================================END\n");
     std::string frienda(category_label);
     //std::string frienda = category_label;
     frienda = frienda + '\0';
     category_label = category_label + '\0';
-    OutputDebugStringA("============================================================!");
+    OutputDebugStringA("\n============================================================END\n");
     OutputDebugStringA("" + frienda[0]);
     OutputDebugStringA("" + frienda[1]);
     OutputDebugStringA("" + frienda[2]);
@@ -255,9 +266,9 @@ void debugging_function(std::string category_label, std::string text_date_field,
 
 void Main_Frame::OnInsert(wxCommandEvent& event)
 {
-    //debugging_function(category_combo_box->GetValue().ToStdString(), text_date_field->GetValue().ToStdString(), text_record_field->GetValue().ToStdString());
+    debugging_function(category_combo_box->GetValue().ToStdString(), text_date_field->GetValue().ToStdString(), text_record_field->GetValue().ToStdString());
     //category_label->SetLabel("new value"); Example to change label.
-    insert_to_csv(category_combo_box->GetValue().ToStdString(), text_date_field->GetValue().ToStdString(), text_record_field->GetValue().ToStdString());
+    //insert_to_csv(category_combo_box->GetValue().ToStdString(), text_date_field->GetValue().ToStdString(), text_record_field->GetValue().ToStdString());
 }
 
 void Main_Frame::insert_to_csv(std::string category_label, std::string text_date_field, std::string text_record_field)
@@ -327,7 +338,7 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_date
     {
         csv_maintainer_main(category_label + ".csv", text_date_field, text_record_field);
     }
-    Main_Frame::UpdateStatusBar(": " + std::filesystem::current_path().generic_string() + "/" + "_Tracking_Centraliser_Root_Folder" + "/" + category_label + ".csv");
+    Main_Frame::UpdateStatusBar(std::filesystem::current_path().generic_string() + "/" + "_Tracking_Centraliser_Root_Folder" + "/" + category_label + ".csv");
     wxLogMessage("[+] Inserted: [" + text_date_field + "] " + text_record_field + " to: " + category_combo_box->GetValue() + ".csv");
     
     // "Dynamically" add items to dropdown list.
