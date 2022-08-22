@@ -163,14 +163,20 @@ void Main_Frame::UpdateStatusBar(wxString message)
     status_text_bar->SetStatusText(message, 0); //text in field 0
 }
 
-void debugging_function(std::string category_label, std::string text_date_field, std::string text_record_field)
+void debugging_function(std::string category_label, std::string delta, std::string text_record_field)
 {
     wxLogDebug("<===================LABELS===================>");
     wxLogDebug(category_label.c_str());
-    wxLogDebug(text_date_field.c_str());
+    wxLogDebug(delta.c_str());
     wxLogDebug(text_record_field.c_str());
     wxLogDebug("<===================LABELS===================>\n");
-    std::string test1 = text_date_field;
+
+    for (auto i : delta)
+        wxLogDebug(i + "");
+
+
+    std::string test1 = delta.c_str();
+        //text_date_field->GetValue().ToStdString();
     //test1 += '\0';
     //test1 = test1.c_str();
 
@@ -182,7 +188,8 @@ void debugging_function(std::string category_label, std::string text_date_field,
     strcpy(dest, src);
 
     wxLogDebug("Final copied string : %s\n", dest);
-    OutputDebugStringA(" " + dest[1] + '\n');
+    wxLogDebug("Display below: " + '\n');
+    wxLogDebug("CHAR PRINT " + dest[0] + '\n');
 
     OutputDebugStringA("\n============================================================END\n");
     OutputDebugStringA(test1.c_str());
