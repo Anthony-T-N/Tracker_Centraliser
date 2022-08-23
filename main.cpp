@@ -273,9 +273,9 @@ void debugging_function(std::string category_label, std::string delta, std::stri
 
 void Main_Frame::OnInsert(wxCommandEvent& event)
 {
-    debugging_function(category_combo_box->GetValue().ToStdString(), text_date_field->GetValue().ToStdString(), text_record_field->GetValue().ToStdString());
+    //debugging_function(category_combo_box->GetValue().ToStdString(), text_date_field->GetValue().ToStdString(), text_record_field->GetValue().ToStdString());
     //category_label->SetLabel("new value"); Example to change label.
-    //insert_to_csv(category_combo_box->GetValue().ToStdString(), text_date_field->GetValue().ToStdString(), text_record_field->GetValue().ToStdString());
+    insert_to_csv(category_combo_box->GetValue().ToStdString(), text_date_field->GetValue().ToStdString(), text_record_field->GetValue().ToStdString());
 }
 
 void Main_Frame::insert_to_csv(std::string category_label, std::string text_date_field, std::string text_record_field)
@@ -348,10 +348,22 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_date
     Main_Frame::UpdateStatusBar(std::filesystem::current_path().generic_string() + "/" + "_Tracking_Centraliser_Root_Folder" + "/" + category_label + ".csv");
     wxLogMessage("[+] Inserted: [" + text_date_field + "] " + text_record_field + " to: " + category_combo_box->GetValue() + ".csv");
     
+    // TO-DO Selecting same category adds the same catergory to list. Lack of array validation.
     // "Dynamically" add items to dropdown list.
+    /*
     category_item_arr.Add(category_label);
     category_combo_box->Set(category_item_arr);
-
+    */
+    category_item_arr.Clear();
+    std::ifstream input_file;
+    std::string input_file_line;
+    input_file.open("_Tracking_Centraliser_Category_List.txt");
+    while (std::getline(input_file, input_file_line))
+    {
+        category_item_arr.Add(input_file_line);
+    }
+    input_file.close();
+    category_combo_box->Set(category_item_arr);
     /*
     std::string path = std::filesystem::current_path().generic_string() + "/_Tracking_Centraliser_Root_Folder/";
     for (const auto& entry : std::filesystem::directory_iterator(path))
