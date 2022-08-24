@@ -56,7 +56,6 @@ class Main_Frame : public wxFrame
         void OnExercise(wxCommandEvent& event);
         void OnBookmark(wxCommandEvent& event);
         void insert_to_csv(std::string category_label, std::string text_date_field, std::string text_record_field);
-        
 };
 
 enum
@@ -349,6 +348,7 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_date
     wxLogMessage("[+] Inserted: [" + text_date_field + "] " + text_record_field + " to: " + category_combo_box->GetValue() + ".csv");
     
     // TO-DO Selecting same category adds the same catergory to list. Lack of array validation.
+    // TO-DO Keep existing catergory field with label without removal. 
     // "Dynamically" add items to dropdown list.
     /*
     category_item_arr.Add(category_label);
