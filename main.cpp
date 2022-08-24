@@ -347,13 +347,7 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_date
     Main_Frame::UpdateStatusBar(std::filesystem::current_path().generic_string() + "/" + "_Tracking_Centraliser_Root_Folder" + "/" + category_label + ".csv");
     wxLogMessage("[+] Inserted: [" + text_date_field + "] " + text_record_field + " to: " + category_combo_box->GetValue() + ".csv");
     
-    // TO-DO Selecting same category adds the same catergory to list. Lack of array validation.
-    // TO-DO Keep existing catergory field with label without removal. 
     // "Dynamically" add items to dropdown list.
-    /*
-    category_item_arr.Add(category_label);
-    category_combo_box->Set(category_item_arr);
-    */
     category_item_arr.Clear();
     std::ifstream input_file;
     std::string input_file_line;
@@ -364,6 +358,7 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_date
     }
     input_file.close();
     category_combo_box->Set(category_item_arr);
+    category_combo_box->SetValue(category_label);
     /*
     std::string path = std::filesystem::current_path().generic_string() + "/_Tracking_Centraliser_Root_Folder/";
     for (const auto& entry : std::filesystem::directory_iterator(path))
