@@ -61,8 +61,9 @@ class Main_Frame : public wxFrame
 enum
 {
     ID_Hello = 1,
-    TEXT_Main = wxID_HIGHEST + 1,
-    BUTTON_Insert = wxID_HIGHEST + 1
+    TEXT_Main = wxID_HIGHEST + 2,
+    BUTTON_Insert = wxID_HIGHEST + 3,
+    BUTTON_Undo = wxID_HIGHEST + 4
 };
 
 const int ID_Media = 2;
@@ -101,7 +102,7 @@ Main_Frame::Main_Frame()
     wxBoxSizer* hbox = new wxBoxSizer(wxHORIZONTAL);
 
     // wxFlexGridSizer(int rows, int cols, int vgap, int hgap)
-    wxFlexGridSizer* fgs = new wxFlexGridSizer(4, 2, 9, 25);
+    wxFlexGridSizer* fgs = new wxFlexGridSizer(5, 2, 9, 25);
 
     //SetMinSize(GetBestSize());
 
@@ -133,8 +134,10 @@ Main_Frame::Main_Frame()
     wxButton* insert_button = new wxButton(panel, BUTTON_Insert, _T("INSERT"),
         wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_VERTICAL);
 
-    wxButton* undo_button = new wxButton(panel, BUTTON_Insert, _T("UNDO"),
+    /*
+    wxButton* undo_button = new wxButton(panel, BUTTON_Undo, _T("UNDO"),
         wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_VERTICAL);
+    */
 
     fgs->Add(date_label);
     fgs->Add(text_date_field, 1, wxEXPAND);
@@ -144,7 +147,7 @@ Main_Frame::Main_Frame()
     fgs->Add(text_record_field, 1, wxEXPAND);
     fgs->Add(review_label, 1, wxEXPAND);
     fgs->Add(insert_button);
-    fgs->Add(undo_button);
+    // fgs->Add(undo_button);
 
     Bind(wxEVT_BUTTON, &Main_Frame::OnInsert, this, BUTTON_Insert);
 
