@@ -4,6 +4,7 @@
 #include <string>
 #include <wx/log.h>
 #include "Bookmark_Counter_h.h"
+#include <wx/msgdlg.h>
 
 #pragma warning(disable:4996);
 
@@ -148,8 +149,7 @@ int bookmark_counter_main(int current_bookmark_total_input)
             {
                 temp_report_log += temp_report[temp_report.size() - i] + "\n";
             }
-            const wxString& msg = temp_report_log;
-            wxLogMessage(msg);
+            wxLogMessage(temp_report_log.c_str());
         }
         else if (temp_report.size() < 20)
         {
@@ -157,21 +157,17 @@ int bookmark_counter_main(int current_bookmark_total_input)
             {
                 temp_report_log += temp_report[temp_report.size() - i] + "\n";
             }
-            const wxString& msg = temp_report_log;
-            wxLogMessage(msg);
+            wxLogMessage(temp_report_log.c_str());
         }
-        //std::cout << "\n";
-        // No option to undo changes for newly created CSV files.
         if (first_csv == 1)
-        {
-            wxLogMessage("> Undo ? (y): ");
-            std::string user_input;
-            std::getline(std::cin, user_input);
-            if (user_input == "y")
+        {            
+            int answer = wxMessageBox("> Undo ? (y):", "Confirm", wxYES_NO | wxICON_INFORMATION);
+            if (answer == wxYES)
             {
+                // TO-DO: Stuck in loop. Fix.
                 remove_csv_last_line();
             }
-            else
+            else if (answer == wxNO)
             {
                 break;
             }
