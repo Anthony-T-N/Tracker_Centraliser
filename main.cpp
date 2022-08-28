@@ -324,7 +324,7 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_date
     {
         csv_maintainer_main("_Critical_URLs.csv", text_date_field, text_record_field);
     }
-    else if (category_label == "_Bookmark")
+    else if (category_label == "_Bookmark_record")
     {
         // Note: Fails to validate very large numbers (Above 2147483647 to be exact).
         if (text_record_field.find_first_not_of("0123456789") != std::string::npos || text_record_field.empty())
