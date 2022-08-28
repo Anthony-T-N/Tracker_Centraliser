@@ -15,7 +15,7 @@ int calculate_difference(int current_bookmark_total_input)
     // Function uses: <iostream>, <fstream>, <string>, <filesystem>
 
     std::ifstream input_file;
-    input_file.open("bookmark_record.csv");
+    input_file.open("_Bookmark_record.csv");
     std::string input_file_line;
     std::string last_input_line;
     while (std::getline(input_file, input_file_line))
@@ -43,10 +43,10 @@ void remove_csv_last_line()
 {
     // Function uses: <iostream>, <fstream>
 
-    wxLogMessage("[!] Removing last line");
+    wxLogMessage("[!] Removing last line;");
 
     std::ifstream input_file;
-    input_file.open("bookmark_record.csv");
+    input_file.open("_Bookmark_record.csv");
 
     std::ofstream output_file;
     output_file.open("temp_record.csv");
@@ -70,31 +70,31 @@ void remove_csv_last_line()
         output_file << input_file_line << "\n";
         if (last_line == line_counter)
         {
-            wxLogMessage("[!] Skip last line;");
+            wxLogMessage("[!] Skipping last line");
             break;
         }
     }
     input_file.close();
     output_file.close();
-    if (remove("bookmark_record.csv") == 0)
+    if (remove("_Bookmark_record.csv") == 0)
     {
         wxLogMessage("[+] Filename deleted successfully");
-        wxLogMessage("\"bookmark_record.csv\" deleted");
+        wxLogMessage("\"_Bookmark_record.csv\" deleted");
     }
     else
     {
         wxLogMessage("[-] Error with deletion");
     }
-    int value = std::rename("temp_record.csv", "bookmark_record.csv");
+    int value = std::rename("temp_record.csv", "_Bookmark_record.csv");
     if (!value)
     {
         wxLogMessage("[+] Filename renamed successfully");
-        wxLogMessage("temp_record.csv > bookmark_record.csv");
+        wxLogMessage("temp_record.csv > _Bookmark_record.csv");
     }
     else
     {
         wxLogMessage("[-] Error with filename change");
-        wxLogMessage("temp_record.csv !> bookmark_record.csv");
+        wxLogMessage("temp_record.csv !> _Bookmark_record.csv");
     }
 }
 
@@ -105,11 +105,11 @@ int write_to_csv(std::string current_date, int current_bookmark_total_input)
     int difference = 0;
     // output file stream allows you to write contents to a file.
     std::ofstream output_file;
-    if (std::filesystem::exists("bookmark_record.csv") == false)
+    if (std::filesystem::exists("_Bookmark_record.csv") == false)
     {
-        wxLogMessage("[!] Creating new bookmark_record.csv;");
-        output_file.open("bookmark_record.csv", std::ios::app);
-        wxLogMessage("[+] Opened bookmark_record.csv successfully;");
+        wxLogMessage("[!] Creating new _Bookmark_record.csv;");
+        output_file.open("_Bookmark_record.csv", std::ios::app);
+        wxLogMessage("[+] Opened _Bookmark_record.csv successfully;");
         // Adding in column headings.
         output_file << "Date" << "," << "Current Total" << "," << "Difference" << "\n";
         wxLogMessage("[+] Adding new entry: ");
@@ -123,8 +123,8 @@ int write_to_csv(std::string current_date, int current_bookmark_total_input)
     else
     {
         // std::ios::app informs program to append and not to overwrite.
-        output_file.open("bookmark_record.csv", std::ios::app);
-        wxLogMessage("[+] Opened bookmark_record.csv successfully;");
+        output_file.open("_Bookmark_record.csv", std::ios::app);
+        wxLogMessage("[+] Opened _Bookmark_record.csv successfully;");
         difference = calculate_difference(current_bookmark_total_input);
         const wxString& msg = "[+] Adding new entry: \n" + current_date + " | " + std::to_string(current_bookmark_total_input) + " | " + std::to_string(difference);
         wxLogMessage(msg);
@@ -164,8 +164,8 @@ int bookmark_counter_main(int current_bookmark_total_input)
             int answer = wxMessageBox("> Undo ? (y):", "Confirm", wxYES_NO | wxICON_INFORMATION);
             if (answer == wxYES)
             {
-                // TO-DO: Stuck in loop. Fix.
                 remove_csv_last_line();
+                break;
             }
             else if (answer == wxNO)
             {
