@@ -134,11 +134,6 @@ Main_Frame::Main_Frame()
     wxButton* insert_button = new wxButton(panel, BUTTON_Insert, _T("INSERT"),
         wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_VERTICAL);
 
-    /*
-    wxButton* undo_button = new wxButton(panel, BUTTON_Undo, _T("UNDO"),
-        wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_VERTICAL);
-    */
-
     fgs->Add(date_label);
     fgs->Add(text_date_field, 1, wxEXPAND);
     fgs->Add(category_label);
@@ -147,7 +142,6 @@ Main_Frame::Main_Frame()
     fgs->Add(text_record_field, 1, wxEXPAND);
     fgs->Add(review_label, 1, wxEXPAND);
     fgs->Add(insert_button);
-    // fgs->Add(undo_button);
 
     Bind(wxEVT_BUTTON, &Main_Frame::OnInsert, this, BUTTON_Insert);
 
@@ -367,6 +361,7 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_date
     category_combo_box->Set(category_item_arr);
     category_combo_box->SetValue(category_label);
     /*
+    * // Reads through folder with existing text files and prints out name.
     std::string path = std::filesystem::current_path().generic_string() + "/_Tracking_Centraliser_Root_Folder/";
     for (const auto& entry : std::filesystem::directory_iterator(path))
     {
