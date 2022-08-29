@@ -139,6 +139,11 @@ int bookmark_counter_main(int current_bookmark_total_input)
 {
     std::string temp_report_log;
 
+    // TO-DO: Write to file in root folder.
+    std::string root_folder_name("_Tracking_Centraliser_Root_Folder");
+    root_folder_creation(root_folder_name, "_Bookmark_record.csv");
+
+
     while (true)
     {
         int first_csv = write_to_csv(get_current_date(), current_bookmark_total_input);
