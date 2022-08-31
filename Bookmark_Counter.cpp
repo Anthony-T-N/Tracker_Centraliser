@@ -39,7 +39,7 @@ int calculate_difference(std::string full_bookmark_record_path, int current_book
     return current_bookmark_total_input - stoi(last_input_line);
 }
 
-void remove_csv_last_line(std::string full_bookmark_record_path)
+void remove_csv_last_line(std::string full_bookmark_record_path, std::string full_temp_record_path)
 {
     // Function uses: <iostream>, <fstream>
 
@@ -49,7 +49,7 @@ void remove_csv_last_line(std::string full_bookmark_record_path)
     input_file.open(full_bookmark_record_path);
 
     std::ofstream output_file;
-    output_file.open("temp_record.csv");
+    output_file.open(full_temp_record_path);
 
     std::string input_file_line;
     int line_counter = 0;
@@ -85,7 +85,7 @@ void remove_csv_last_line(std::string full_bookmark_record_path)
     {
         wxLogMessage("[-] Error with deletion");
     }
-    int value = std::rename("temp_record.csv", "_Bookmark_record.csv");
+    int value = std::rename(full_temp_record_path.c_str(), full_bookmark_record_path.c_str());
     if (!value)
     {
         wxLogMessage("[+] Filename renamed successfully");
@@ -101,6 +101,9 @@ void remove_csv_last_line(std::string full_bookmark_record_path)
 int write_to_csv(std::string full_bookmark_record_path, std::string current_date, int current_bookmark_total_input)
 {
     // Function uses: <iostream>, <fstream>, <filesystem>
+
+    OutputDebugStringA("====================================================================================================================================");
+    OutputDebugStringA(full_bookmark_record_path.c_str());
 
     int difference = 0;
     // output file stream allows you to write contents to a file.
@@ -122,6 +125,9 @@ int write_to_csv(std::string full_bookmark_record_path, std::string current_date
     }
     else
     {
+        OutputDebugStringA("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        OutputDebugStringA(full_bookmark_record_path.c_str());
+
         // std::ios::app informs program to append and not to overwrite.
         output_file.open(full_bookmark_record_path, std::ios::app);
         //output_file.open("_Bookmark_record.csv", std::ios::app);
@@ -141,8 +147,18 @@ int bookmark_counter_main(int current_bookmark_total_input)
     std::string temp_report_log;
 
     std::string root_folder_name("_Tracking_Centraliser_Root_Folder");
-    root_folder_creation(root_folder_name, "_Bookmark_record.csv");
+    if (std::filesystem::exists(root_folder_name) == false)
+    {
+        wxLogMessage("[-] _Tracking_Centraliser_Root_Folder does not exist;");
+        std::filesystem::create_directories(root_folder_name);
+    }
+    if (std::filesystem::exists(root_folder_name + "/" + "_Backup_Record_Folder") == false)
+    {
+        wxLogMessage("[-] _Tracking_Centraliser_Root_Folder Backup Folder does not exist;");
+        std::filesystem::create_directories(root_folder_name + "/" + "_Backup_Record_Folder");
+    }
     std::string full_bookmark_record_path = root_folder_name + "/_Bookmark_record.csv";
+    std::string full_temp_record_path = root_folder_name + "/temp_record.csv";
 
     // TO-DO: Fix temp_record path.
 
@@ -171,7 +187,7 @@ int bookmark_counter_main(int current_bookmark_total_input)
             int answer = wxMessageBox("> Undo ? (y):", "Confirm", wxYES_NO | wxICON_INFORMATION);
             if (answer == wxYES)
             {
-                remove_csv_last_line(full_bookmark_record_path);
+                remove_csv_last_line(full_bookmark_record_path, full_temp_record_path);
                 break;
             }
             else if (answer == wxNO)
