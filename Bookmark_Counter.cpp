@@ -101,10 +101,6 @@ void remove_csv_last_line(std::string full_bookmark_record_path, std::string ful
 int write_to_csv(std::string full_bookmark_record_path, std::string current_date, int current_bookmark_total_input)
 {
     // Function uses: <iostream>, <fstream>, <filesystem>
-
-    OutputDebugStringA("====================================================================================================================================");
-    OutputDebugStringA(full_bookmark_record_path.c_str());
-
     int difference = 0;
     // output file stream allows you to write contents to a file.
     std::ofstream output_file;
@@ -125,9 +121,6 @@ int write_to_csv(std::string full_bookmark_record_path, std::string current_date
     }
     else
     {
-        OutputDebugStringA("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-        OutputDebugStringA(full_bookmark_record_path.c_str());
-
         // std::ios::app informs program to append and not to overwrite.
         output_file.open(full_bookmark_record_path, std::ios::app);
         //output_file.open("_Bookmark_record.csv", std::ios::app);
@@ -160,19 +153,16 @@ int bookmark_counter_main(int current_bookmark_total_input)
     std::string full_bookmark_record_path = root_folder_name + "/_Bookmark_record.csv";
     std::string full_temp_record_path = root_folder_name + "/temp_record.csv";
 
-    // TO-DO: Fix temp_record path.
-
     while (true)
     {
         int first_csv = write_to_csv(full_bookmark_record_path, get_current_date(), current_bookmark_total_input);
-        wxLogMessage("[========== Report ==========]");
         if (temp_report.size() > 20)
         {
             for (int i = 20; i > 0; i--)
             {
                 temp_report_log += temp_report[temp_report.size() - i] + "\n";
             }
-            wxLogMessage(temp_report_log.c_str());
+            wxMessageBox(temp_report_log.c_str());
         }
         else if (temp_report.size() < 20)
         {
@@ -180,8 +170,10 @@ int bookmark_counter_main(int current_bookmark_total_input)
             {
                 temp_report_log += temp_report[temp_report.size() - i] + "\n";
             }
-            wxLogMessage(temp_report_log.c_str());
+            wxMessageBox(temp_report_log.c_str());
         }
+        temp_report.clear();
+        temp_report_log.clear();
         if (first_csv == 1)
         {            
             int answer = wxMessageBox("> Undo ? (y):", "Confirm", wxYES_NO | wxICON_INFORMATION);
@@ -199,8 +191,6 @@ int bookmark_counter_main(int current_bookmark_total_input)
         {
             break;
         }
-        temp_report.clear();
-        temp_report_log.clear();
     }
     return 0;
 }
