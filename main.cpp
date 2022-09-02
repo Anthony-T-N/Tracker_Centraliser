@@ -323,7 +323,14 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_date
         // Note: Fails to validate very large numbers (Above 2147483647 to be exact).
         if (text_record_field.find_first_not_of("0123456789") != std::string::npos || text_record_field.empty())
         {
-            wxLogError("[-] Invalid input - Please try again:");
+            wxLogError("[-] Invalid input - Please try again");
+            return;
+        }
+        // TO-DO
+        OutputDebugStringA(text_record_field.c_str());
+        if (std::stoi(text_record_field) >= 2147483647)
+        {
+            wxLogError("[-] Invalid number");
             return;
         }
         bookmark_counter_main(std::stoi(text_record_field));
@@ -332,7 +339,7 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_date
     {
         if (text_record_field.find_first_not_of("0123456789") != std::string::npos || text_record_field.empty())
         {
-            wxLogError("[-] Invalid input - Please try again:");
+            wxLogError("[-] Invalid input - Please try again");
             return;
         }
         csv_maintainer_main("_Exercise.csv", text_date_field, text_record_field);
