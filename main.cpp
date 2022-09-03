@@ -326,11 +326,9 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_date
             wxLogError("[-] Invalid input - Please try again");
             return;
         }
-        // TO-DO
-        OutputDebugStringA(text_record_field.c_str());
-        if (std::stoi(text_record_field) >= 2147483647)
+        if (text_record_field.length() >= 10)
         {
-            wxLogError("[-] Invalid number");
+            wxLogError("[-] Large number");
             return;
         }
         bookmark_counter_main(std::stoi(text_record_field));
