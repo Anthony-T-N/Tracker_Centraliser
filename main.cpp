@@ -280,11 +280,24 @@ void Main_Frame::OnInsert(wxCommandEvent& event)
 
 void Main_Frame::insert_to_csv(std::string category_label, std::string text_date_field, std::string text_record_field)
 {
+    /* TO_DO:
+    - Date validation - User can insert any number (And characters) into "Current_Date" field.
+    - Text file creation name validation.
+    */
+
     if (category_label.empty() || text_date_field.empty() || text_record_field.empty())
     {
         wxLogError("[-] Invalid input - Empty Field");
         return;
     }
+
+    if (category_label.find('/') != std::string::npos)
+    {
+        wxLogError("BREAK");
+        return;
+    }
+
+
     /*
     //Date validator
     if (text_date_field[4] == '-' && text_date_field[7] == '-')
@@ -318,6 +331,7 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_date
     {
         csv_maintainer_main("_Critical_URLs.csv", text_date_field, text_record_field);
     }
+    // Inserting records into _Bookmark_record does not pass user_defined date.
     else if (category_label == "_Bookmark_record")
     {
         // Note: Fails to validate very large numbers (Above 2147483647 to be exact).
@@ -483,18 +497,20 @@ void Main_Frame::OnExit(wxCommandEvent& event)
 /*
 Project Plan and Design
 
-Brief : Centralise tracking of a number of activities.
+Brief : Centralise the tracking of a number of activities and insert into various text files.
 
 [Version 1]
 
 === Minimum Functions ===
 [+] Window that associate entered text/string with a time/date.
 [+] Entered text recorded in csv file.
-[-] Optimized to be lightweight and run in the background.
-[-] Fixed minimum window size ^ Maximum size
 [+] Dark background + White Text
-[-] Change colour when Unfocused
 [+] Organise entries by date.
 [+] Record Intergity Check 
+
+[Version 1]
+[-] Change colour when Unfocused
+[-] Optimized to be lightweight and run in the background.
+[-] Fixed minimum window size ^ Maximum size
 
 */
