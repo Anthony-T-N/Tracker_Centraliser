@@ -291,12 +291,16 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_date
         return;
     }
 
-    if (category_label.find('/') != std::string::npos)
-    {
-        wxLogError("BREAK");
-        return;
-    }
+    std::string special_characters = "\\/:*?\"<>|";
 
+    for (int i = 0; i <= special_characters.length(); i++)
+    {
+        if (category_label.find(special_characters[i]) != std::string::npos)
+        {
+            wxLogError("BREAK: " + special_characters[i]);
+            return;
+        }
+    }
 
     /*
     //Date validator
