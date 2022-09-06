@@ -4,6 +4,7 @@
 #include <fstream>
 #include "Bookmark_Counter_h.h"
 
+
 /* Troubleshoot
 
 Severity	Code	Description	Project	File	Line	Suppression State
@@ -291,13 +292,17 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_date
         return;
     }
 
+    if (text_date_field.find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ") == std::string::npos)
+    {
+        wxLogError("[-] Invalid date");
+        return;
+    }
     std::string special_characters = "\\/:*?\"<>|";
-
     for (int i = 0; i <= special_characters.length(); i++)
     {
         if (category_label.find(special_characters[i]) != std::string::npos)
         {
-            wxLogError("BREAK: " + special_characters[i]);
+            wxLogError("[-] A special character detected");
             return;
         }
     }
