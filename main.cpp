@@ -292,11 +292,21 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_date
         return;
     }
 
-    if (text_date_field.find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ") == std::string::npos)
+    if (text_date_field.find_first_of("0123456789") == std::string::npos || text_date_field.find_first_of("-") == std::string::npos)
     {
         wxLogError("[-] Invalid date");
         return;
     }
+    std::string b = "-";
+    int count = 0;
+    std::string::size_type i = text_date_field.find(b);
+    while (i != std::string::npos)
+    {
+        count++;
+        i = text_date_field.find(b, i + b.length());
+    }
+    wxLogError((std::to_string(count)).c_str());
+
     std::string special_characters = "\\/:*?\"<>|";
     for (int i = 0; i <= special_characters.length(); i++)
     {
