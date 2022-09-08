@@ -294,19 +294,24 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_date
 
     if (text_date_field.find_first_of("0123456789") == std::string::npos || text_date_field.find_first_of("-") == std::string::npos)
     {
-        wxLogError("[-] Invalid date");
+        wxLogError("[-] Invalid date format");
         return;
     }
-    std::string b = "-";
+    std::string target_char = "-";
     int count = 0;
-    std::string::size_type i = text_date_field.find(b);
+    std::string::size_type i = text_date_field.find(target_char);
     while (i != std::string::npos)
     {
         count++;
-        i = text_date_field.find(b, i + b.length());
+        i = text_date_field.find(target_char, i + target_char.length());
     }
-    wxLogError((std::to_string(count)).c_str());
-
+    if (count != 2)
+    {
+        wxLogError((std::to_string(count)).c_str());
+        wxLogError(("[-] Invalid date format - Hyphen Mismatch: " + std::to_string(count)).c_str());
+        return;
+    }
+  
     std::string special_characters = "\\/:*?\"<>|";
     for (int i = 0; i <= special_characters.length(); i++)
     {
