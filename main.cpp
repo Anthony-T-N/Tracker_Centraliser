@@ -311,7 +311,21 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_date
         wxLogError(("[-] Invalid date format - Hyphen Mismatch: " + std::to_string(count)).c_str());
         return;
     }
-  
+    count = 0;
+    for (auto i : text_date_field)
+    {
+        if (isdigit(i))
+        {
+            count++;
+        }
+    }
+    if (count != 8)
+    {
+        wxLogError((std::to_string(count)).c_str());
+        wxLogError(("[-] Invalid date format - Date Mismatch: " + std::to_string(count)).c_str());
+        return;
+    }
+
     std::string special_characters = "\\/:*?\"<>|";
     for (int i = 0; i <= special_characters.length(); i++)
     {
