@@ -107,6 +107,7 @@ Main_Frame::Main_Frame()
 
     //SetMinSize(GetBestSize());
 
+    /*
     // TO-DO: Read through existing CSV files and add to primary file list name.
     // No overwriting
     std::ifstream input_file;
@@ -117,6 +118,16 @@ Main_Frame::Main_Frame()
         category_item_arr.Add(input_file_line);
     }
     input_file.close();
+    */
+
+    // DEBUG and only read CSV files
+    // Reads through folder with existing text files and prints out name.
+    std::string path = std::filesystem::current_path().generic_string() + "/_Tracking_Centraliser_Root_Folder/";
+    for (const auto& entry : std::filesystem::directory_iterator(path))
+    {
+        wxLogMessage((entry.path().generic_string().substr(entry.path().generic_string().find_last_of("//") + 1)).c_str());
+        category_item_arr.Add((entry.path().generic_string().substr(entry.path().generic_string().find_last_of("//") + 1)).c_str());
+    }
 
     wxStaticText* date_label = new wxStaticText(panel, -1, wxT("Current_Date:"));
     date_label->SetForegroundColour(wxColour(255,255,255));
@@ -405,6 +416,7 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_date
     Main_Frame::UpdateStatusBar(std::filesystem::current_path().generic_string() + "/" + "_Tracking_Centraliser_Root_Folder" + "/" + category_label + ".csv");
     wxLogMessage("[+] Inserted: [" + text_date_field + "] " + text_record_field + " to: " + category_combo_box->GetValue() + ".csv");
     
+    /*
     // "Dynamically" add items to dropdown list.
     category_item_arr.Clear();
     std::ifstream input_file;
@@ -417,14 +429,19 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_date
     input_file.close();
     category_combo_box->Set(category_item_arr);
     category_combo_box->SetValue(category_label);
-    /*
-    * // Reads through folder with existing text files and prints out name.
+    */
+    
+    // DEBUG and only read CSV files
+    // Reads through folder with existing text files and prints out name.
+    category_item_arr.Clear();
     std::string path = std::filesystem::current_path().generic_string() + "/_Tracking_Centraliser_Root_Folder/";
     for (const auto& entry : std::filesystem::directory_iterator(path))
     {
         wxLogMessage((entry.path().generic_string().substr(entry.path().generic_string().find_last_of("//") + 1)).c_str());
+        category_item_arr.Add((entry.path().generic_string().substr(entry.path().generic_string().find_last_of("//") + 1)).c_str());
     }
-    */
+    category_combo_box->Set(category_item_arr);
+    category_combo_box->SetValue(category_label);
 }
 
 /*
