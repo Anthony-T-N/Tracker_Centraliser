@@ -120,13 +120,16 @@ Main_Frame::Main_Frame()
     input_file.close();
     */
 
-    // DEBUG and only read CSV files
+    // DEBUG and only read CSV files and remove extension for processing
     // Reads through folder with existing text files and prints out name.
     std::string path = std::filesystem::current_path().generic_string() + "/_Tracking_Centraliser_Root_Folder/";
     for (const auto& entry : std::filesystem::directory_iterator(path))
     {
-        wxLogMessage((entry.path().generic_string().substr(entry.path().generic_string().find_last_of("//") + 1)).c_str());
-        category_item_arr.Add((entry.path().generic_string().substr(entry.path().generic_string().find_last_of("//") + 1)).c_str());
+        if (entry.path().generic_string().find(".csv") != std::string::npos)
+        {
+            wxLogMessage((entry.path().generic_string().substr(entry.path().generic_string().find_last_of("//") + 1)).c_str());
+            category_item_arr.Add((entry.path().generic_string().substr(entry.path().generic_string().find_last_of("//") + 1)).c_str());
+        }
     }
 
     wxStaticText* date_label = new wxStaticText(panel, -1, wxT("Current_Date:"));
@@ -431,14 +434,17 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_date
     category_combo_box->SetValue(category_label);
     */
     
-    // DEBUG and only read CSV files
+    // DEBUG and only read CSV files and remove extension for processing
     // Reads through folder with existing text files and prints out name.
     category_item_arr.Clear();
     std::string path = std::filesystem::current_path().generic_string() + "/_Tracking_Centraliser_Root_Folder/";
     for (const auto& entry : std::filesystem::directory_iterator(path))
     {
-        wxLogMessage((entry.path().generic_string().substr(entry.path().generic_string().find_last_of("//") + 1)).c_str());
-        category_item_arr.Add((entry.path().generic_string().substr(entry.path().generic_string().find_last_of("//") + 1)).c_str());
+        if (entry.path().generic_string().find(".csv") != std::string::npos)
+        {
+            wxLogMessage((entry.path().generic_string().substr(entry.path().generic_string().find_last_of("//") + 1)).c_str());
+            category_item_arr.Add((entry.path().generic_string().substr(entry.path().generic_string().find_last_of("//") + 1)).c_str());
+        }
     }
     category_combo_box->Set(category_item_arr);
     category_combo_box->SetValue(category_label);
