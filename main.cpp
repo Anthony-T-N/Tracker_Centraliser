@@ -127,8 +127,10 @@ Main_Frame::Main_Frame()
     {
         if (entry.path().generic_string().find(".csv") != std::string::npos)
         {
-            wxLogMessage((entry.path().generic_string().substr(entry.path().generic_string().find_last_of("//") + 1)).c_str());
-            category_item_arr.Add((entry.path().generic_string().substr(entry.path().generic_string().find_last_of("//") + 1)).c_str());
+            std::string test = (entry.path().generic_string().substr(entry.path().generic_string().find_last_of("//") + 1)).c_str();
+            test.substr(0, test.find_last_of("."));
+            wxLogError(test.c_str());
+            category_item_arr.Add(test);
         }
     }
 
@@ -442,8 +444,10 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_date
     {
         if (entry.path().generic_string().find(".csv") != std::string::npos)
         {
-            wxLogMessage((entry.path().generic_string().substr(entry.path().generic_string().find_last_of("//") + 1)).c_str());
-            category_item_arr.Add((entry.path().generic_string().substr(entry.path().generic_string().find_last_of("//") + 1)).c_str());
+            std::string test = (entry.path().generic_string().substr(entry.path().generic_string().find_last_of("//") + 1)).c_str();
+            test.substr(0, test.find_last_of("."));
+            wxLogError(test.c_str());
+            category_item_arr.Add(test);
         }
     }
     category_combo_box->Set(category_item_arr);
