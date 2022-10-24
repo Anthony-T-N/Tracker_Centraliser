@@ -128,8 +128,7 @@ Main_Frame::Main_Frame()
         if (entry.path().generic_string().find(".csv") != std::string::npos)
         {
             std::string test = (entry.path().generic_string().substr(entry.path().generic_string().find_last_of("//") + 1)).c_str();
-            test = test.substr(0, test.find_last_of(".csv"));
-            wxLogError(test.c_str());
+            test = test.substr(0, test.find_last_of(".csv") - 3);
             OutputDebugStringA(test.c_str());
             category_item_arr.Add(test);
         }
@@ -446,8 +445,7 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_date
         if (entry.path().generic_string().find(".csv") != std::string::npos)
         {
             std::string test = (entry.path().generic_string().substr(entry.path().generic_string().find_last_of("//") + 1)).c_str();
-            test = test.substr(0, test.find_last_of(".csv"));
-            wxLogError(test.c_str());
+            test = test.substr(0, test.find_last_of(".csv") - 3);
             OutputDebugStringA(test.c_str());
             category_item_arr.Add(test);
         }
