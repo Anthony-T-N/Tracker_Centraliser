@@ -4,7 +4,6 @@
 #include <fstream>
 #include "Bookmark_Counter_h.h"
 
-
 /* Troubleshoot
 
 Severity	Code	Description	Project	File	Line	Suppression State
@@ -379,6 +378,7 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_date
         return;
     }
     */
+
     // Removing new lines from inputted text.
     text_record_field.erase(std::remove(text_record_field.begin(), text_record_field.end(), '\n'), text_record_field.end());
     if (category_label == "_Critical_URLs")
@@ -419,7 +419,7 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_date
         csv_maintainer_main(category_label + ".csv", text_date_field, text_record_field);
     }
     //Main_Frame::UpdateStatusBar(std::filesystem::current_path().generic_string() + "/" + "_Tracking_Centraliser_Root_Folder" + "/" + category_label + ".csv"); #Latest update to file.
-    Main_Frame::UpdateStatusBar(": " + category_label + ".csv" + " | " + text_date_field  + " | " + text_record_field);
+    Main_Frame::UpdateStatusBar("[+] " + category_label + ".csv" + " | " + text_date_field  + " | " + text_record_field);
     wxLogMessage("[+] Inserted: [" + text_date_field + "] " + text_record_field + " to: " + category_combo_box->GetValue() + ".csv");
     
     /*
