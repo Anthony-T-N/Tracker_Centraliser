@@ -56,6 +56,7 @@ class Main_Frame : public wxFrame
         void OnExercise(wxCommandEvent& event);
         void OnBookmark(wxCommandEvent& event);
         void insert_to_csv(std::string category_label, std::string text_date_field, std::string text_record_field);
+        void update_category_item_arr();
 };
 
 enum
@@ -106,32 +107,7 @@ Main_Frame::Main_Frame()
 
     //SetMinSize(GetBestSize());
 
-    /*
-    // TO-DO: Read through existing CSV files and add to primary file list name.
-    // No overwriting
-    std::ifstream input_file;
-    std::string input_file_line;
-    input_file.open("_Tracking_Centraliser_Category_List.txt");
-    while (std::getline(input_file, input_file_line))
-    {
-        category_item_arr.Add(input_file_line);
-    }
-    input_file.close();
-    */
-
-    // DEBUG and only read CSV files and remove extension for processing
-    // Reads through folder with existing text files and prints out name.
-    std::string path = std::filesystem::current_path().generic_string() + "/_Tracking_Centraliser_Root_Folder/";
-    for (const auto& entry : std::filesystem::directory_iterator(path))
-    {
-        if (entry.path().generic_string().find(".csv") != std::string::npos)
-        {
-            std::string test = (entry.path().generic_string().substr(entry.path().generic_string().find_last_of("//") + 1)).c_str();
-            test = test.substr(0, test.find_last_of(".csv") - 3);
-            OutputDebugStringA(test.c_str());
-            category_item_arr.Add(test);
-        }
-    }
+    update_category_item_arr();
 
     wxStaticText* date_label = new wxStaticText(panel, -1, wxT("Current_Date:"));
     date_label->SetForegroundColour(wxColour(255,255,255));
@@ -424,6 +400,7 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_date
     
     /*
     // "Dynamically" add items to dropdown list.
+    // // OLD Method of adding filenames to application from text file.
     category_item_arr.Clear();
     std::ifstream input_file;
     std::string input_file_line;
@@ -437,22 +414,37 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_date
     category_combo_box->SetValue(category_label);
     */
     
-    // DEBUG and only read CSV files and remove extension for processing
-    // Reads through folder with existing text files and prints out name.
     category_item_arr.Clear();
+    update_category_item_arr();
+    category_combo_box->Set(category_item_arr);
+    category_combo_box->SetValue(category_label);
+}
+
+void Main_Frame::update_category_item_arr()
+{
+    /*
+    // OLD Method of adding filenames to application from text file.
+    std::ifstream input_file;
+    std::string input_file_line;
+    input_file.open("_Tracking_Centraliser_Category_List.txt");
+    while (std::getline(input_file, input_file_line))
+    {
+        category_item_arr.Add(input_file_line);
+    }
+    input_file.close();
+    */
+
     std::string path = std::filesystem::current_path().generic_string() + "/_Tracking_Centraliser_Root_Folder/";
     for (const auto& entry : std::filesystem::directory_iterator(path))
     {
         if (entry.path().generic_string().find(".csv") != std::string::npos)
         {
-            std::string test = (entry.path().generic_string().substr(entry.path().generic_string().find_last_of("//") + 1)).c_str();
-            test = test.substr(0, test.find_last_of(".csv") - 3);
-            OutputDebugStringA(test.c_str());
-            category_item_arr.Add(test);
+            std::string sub_filename = (entry.path().generic_string().substr(entry.path().generic_string().find_last_of("//") + 1)).c_str();
+            sub_filename = sub_filename.substr(0, sub_filename.find_last_of(".csv") - 3);
+            OutputDebugStringA(sub_filename.c_str());
+            category_item_arr.Add(sub_filename);
         }
     }
-    category_combo_box->Set(category_item_arr);
-    category_combo_box->SetValue(category_label);
 }
 
 /*
