@@ -355,17 +355,10 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_date
     }
     */
 
-    // Removing new lines from inputted text.
-    text_record_field.erase(std::remove(text_record_field.begin(), text_record_field.end(), '\n'), text_record_field.end());
-    if (category_label == "_Critical_URLs")
+    text_record_field.erase(std::remove(text_record_field.begin(), text_record_field.end(), '\n'), text_record_field.end()); // Removing new lines from inputted text.
+    if (category_label == "_*Bookmark_record") // Inserting records into _Bookmark_record does not pass user_defined date.
     {
-        csv_maintainer_main("_Critical_URLs.csv", text_date_field, text_record_field);
-    }
-    // Inserting records into _Bookmark_record does not pass user_defined date.
-    else if (category_label == "_Bookmark_record")
-    {
-        // Note: Fails to validate very large numbers (Above 2147483647 to be exact).
-        if (text_record_field.find_first_not_of("0123456789") != std::string::npos || text_record_field.empty())
+        if (text_record_field.find_first_not_of("0123456789") != std::string::npos || text_record_field.empty()) // Note: Fails to validate very large numbers (Above 2147483647 to be exact).
         {
             wxLogError("[-] Invalid input - Please try again");
             return;
@@ -377,7 +370,7 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_date
         }
         bookmark_counter_main(std::stoi(text_record_field));
     }
-    else if (category_label == "_Exercise")
+    else if (category_label == "_*Exercise")
     {
         if (text_record_field.find_first_not_of("0123456789") != std::string::npos || text_record_field.empty())
         {
@@ -385,10 +378,6 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_date
             return;
         }
         csv_maintainer_main("_Exercise.csv", text_date_field, text_record_field);
-    }
-    else if (category_label == "_Record_Sort_Debug")
-    {
-        csv_maintainer_main(category_label + ".csv", text_date_field, text_record_field);
     }
     else
     {
@@ -398,23 +387,6 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_date
     Main_Frame::UpdateStatusBar("[+] " + category_label + ".csv" + " | " + text_date_field  + " | " + text_record_field);
     wxLogMessage("[+] Inserted: [" + text_date_field + "] " + text_record_field + " to: " + category_combo_box->GetValue() + ".csv");
     
-    /*
-    // "Dynamically" add items to dropdown list.
-    // // OLD Method of adding filenames to application from text file.
-    category_item_arr.Clear();
-    std::ifstream input_file;
-    std::string input_file_line;
-    input_file.open("_Tracking_Centraliser_Category_List.txt");
-    while (std::getline(input_file, input_file_line))
-    {
-        category_item_arr.Add(input_file_line);
-    }
-    input_file.close();
-    category_combo_box->Set(category_item_arr);
-    category_combo_box->SetValue(category_label);
-    */
-    
-    category_item_arr.Clear();
     update_category_item_arr();
     category_combo_box->Set(category_item_arr);
     category_combo_box->SetValue(category_label);
@@ -434,6 +406,7 @@ void Main_Frame::update_category_item_arr()
     input_file.close();
     */
 
+    category_item_arr.Clear();
     std::string path = std::filesystem::current_path().generic_string() + "/_Tracking_Centraliser_Root_Folder/";
     for (const auto& entry : std::filesystem::directory_iterator(path))
     {
@@ -441,7 +414,6 @@ void Main_Frame::update_category_item_arr()
         {
             std::string sub_filename = (entry.path().generic_string().substr(entry.path().generic_string().find_last_of("//") + 1)).c_str();
             sub_filename = sub_filename.substr(0, sub_filename.find_last_of(".csv") - 3);
-            OutputDebugStringA(sub_filename.c_str());
             category_item_arr.Add(sub_filename);
         }
     }
