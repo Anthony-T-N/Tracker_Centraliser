@@ -35,9 +35,9 @@ int write_to_csv(std::string root_folder_name, std::string csv_file_name, std::s
     std::ofstream output_file;
     if (std::filesystem::exists(root_folder_name + "/" + csv_file_name) == false)
     {
-        wxLogMessage("[!] Creating new bookmark_record.csv;");
+        wxLogMessage(("[!] Creating new" + csv_file_name).c_str());
         output_file.open(root_folder_name + "/" + csv_file_name, std::ios::app);
-        wxLogMessage("[+] Opened bookmark_record.csv successfully;");
+        wxLogMessage(("[+] Opened " + csv_file_name + " successfully").c_str());
         output_file << "Date" << "," << "Current Total" << "\n";
         wxLogMessage("[+] Adding new entry: ");
         wxLogMessage((current_date + " | " + message).c_str());
@@ -50,7 +50,7 @@ int write_to_csv(std::string root_folder_name, std::string csv_file_name, std::s
     {
         // std::ios::app informs program to append and not to overwrite.
         output_file.open(root_folder_name + "/" + csv_file_name, std::ios::app);
-        wxLogMessage("[+] Opened bookmark_record.csv successfully;");
+        wxLogMessage(("[+] Opened " + csv_file_name + " successfully;").c_str());
         wxLogMessage(("[+] Adding new entry: \n" + current_date + " | " + message).c_str());
         output_file << current_date << "," << message << "\n";
         temp_report_c.push_back(current_date + "," + message);
