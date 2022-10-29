@@ -168,7 +168,7 @@ void debugging_function(std::string category_label, std::string delta, std::stri
 
 
     std::string test1 = delta.c_str();
-        //text_date_field->GetValue().ToStdString();
+    //text_date_field->GetValue().ToStdString();
     //test1 += '\0';
     //test1 = test1.c_str();
 
@@ -356,7 +356,8 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_date
     */
 
     text_record_field.erase(std::remove(text_record_field.begin(), text_record_field.end(), '\n'), text_record_field.end()); // Removing new lines from inputted text.
-    if (category_label == "_*Bookmark_record") // Inserting records into _Bookmark_record does not pass user_defined date.
+    // [TO_DO] _Bookmark_record selection broken 
+    if (category_label == "_Bookmark_record") // Inserting records into _Bookmark_record does not pass user_defined date.
     {
         if (text_record_field.find_first_not_of("0123456789") != std::string::npos || text_record_field.empty()) // Note: Fails to validate very large numbers (Above 2147483647 to be exact).
         {
@@ -370,7 +371,7 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_date
         }
         bookmark_counter_main(std::stoi(text_record_field));
     }
-    else if (category_label == "_*Exercise")
+    else if (category_label == "_Exercise")
     {
         if (text_record_field.find_first_not_of("0123456789") != std::string::npos || text_record_field.empty())
         {
@@ -385,7 +386,7 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_date
     }
     //Main_Frame::UpdateStatusBar(std::filesystem::current_path().generic_string() + "/" + "_Tracking_Centraliser_Root_Folder" + "/" + category_label + ".csv"); #Latest update to file.
     Main_Frame::UpdateStatusBar("[+] " + category_label + ".csv" + " | " + text_date_field  + " | " + text_record_field);
-    wxLogMessage("[+] Inserted: [" + text_date_field + "] " + text_record_field + " to: " + category_combo_box->GetValue() + ".csv");
+    wxLogMessage("[+] Inserted: [" + text_date_field + "] " + text_record_field + " to " + category_combo_box->GetValue() + ".csv");
     
     update_category_item_arr();
     category_combo_box->Set(category_item_arr);
