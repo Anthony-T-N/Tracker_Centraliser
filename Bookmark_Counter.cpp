@@ -6,7 +6,7 @@
 #include "Bookmark_Counter_h.h"
 #include <wx/msgdlg.h>
 
-#pragma warning(disable:4996);
+#pragma warning(disable:4996)
 
 std::vector<std::string> temp_report = {};
 
@@ -25,12 +25,19 @@ int calculate_difference(std::string full_bookmark_record_path, int current_book
     }
     input_file.close();
 
+    if (temp_report.size() <= 0)
+    {
+        wxLogError("[-] ATTENTION: Empty row located;");
+        wxLogError("[!] Recommendation: Delete existing csv file or fix empty row;");
+        return 0;
+    }
+
     for (double i = 0; i <= temp_report.size() - 1; i++)
     {
-        if (temp_report[i] == "" || temp_report[i] == " " || temp_report[i] == ",,")
+        if (temp_report[i] == "" || temp_report[i] == " " || temp_report[i] == ",,") // Checks for any empty records in csv file.
         {
-            wxLogMessage("[-] ATTENTION: Empty row located;");
-            wxLogMessage("[!] Recommendation: Delete existing csv file or fix empty row;");
+            wxLogError("[-] ATTENTION: Empty row located;");
+            wxLogError("[!] Recommendation: Delete existing csv file or fix empty row;");
             return 0;
         }
     }
@@ -123,7 +130,6 @@ int write_to_csv(std::string full_bookmark_record_path, std::string current_date
     {
         // std::ios::app informs program to append and not to overwrite.
         output_file.open(full_bookmark_record_path, std::ios::app);
-        //output_file.open("_Bookmark_record.csv", std::ios::app);
         wxLogMessage("[+] Opened _Bookmark_record.csv successfully;");
         difference = calculate_difference(full_bookmark_record_path, current_bookmark_total_input);
         const wxString& msg = "[+] Adding new entry: \n" + current_date + " | " + std::to_string(current_bookmark_total_input) + " | " + std::to_string(difference);
