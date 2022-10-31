@@ -182,14 +182,14 @@ int bookmark_counter_main(int current_bookmark_total_input)
         temp_report_log.clear();
         if (first_csv == 1)
         {            
-            int answer = wxMessageBox("> Undo ? (y):", "Confirm", wxYES_NO | wxICON_INFORMATION);
+            int answer = wxMessageBox("> Keep Record ? (y):", "Confirm", wxYES_NO | wxICON_INFORMATION);
             if (answer == wxYES)
             {
-                remove_csv_last_line(full_bookmark_record_path, full_temp_record_path);
                 break;
             }
             else if (answer == wxNO)
             {
+                remove_csv_last_line(full_bookmark_record_path, full_temp_record_path);
                 break;
             }
         }
