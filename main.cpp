@@ -51,10 +51,6 @@ class Main_Frame : public wxFrame
 
     private:
         void OnInsert(wxCommandEvent& event);
-        void OnMedia(wxCommandEvent& event);
-        void OnExit(wxCommandEvent& event);
-        void OnExercise(wxCommandEvent& event);
-        void OnBookmark(wxCommandEvent& event);
         void insert_to_csv(std::string category_label, std::string text_date_field, std::string text_record_field);
         void update_category_item_arr();
 };
@@ -153,6 +149,162 @@ void Main_Frame::UpdateStatusBar(wxString message)
     wxStatusBar* status_text_bar = Main_Frame::GetStatusBar();
     //bar->SetForegroundColour(wxColour(color));
     status_text_bar->SetStatusText(message, 0); //text in field 0
+}
+
+void Main_Frame::OnInsert(wxCommandEvent& event)
+{
+    //debugging_function(category_combo_box->GetValue().ToStdString(), text_date_field->GetValue().ToStdString(), text_record_field->GetValue().ToStdString());
+    //category_label->SetLabel("new value"); Example to change label.
+    insert_to_csv(category_combo_box->GetValue().ToStdString(), text_date_field->GetValue().ToStdString(), text_record_field->GetValue().ToStdString());
+}
+
+void Main_Frame::insert_to_csv(std::string category_label, std::string text_date_field, std::string text_record_field)
+{
+    /* TO_DO:
+    - Date validation - User can insert any number (And characters) into "Current_Date" field.
+    - Text file creation name validation.
+    */
+
+    if (category_label.empty() || text_date_field.empty() || text_record_field.empty())
+    {
+        wxLogError("[-] Invalid input - Empty Field");
+        return;
+    }
+
+    if (text_date_field.find_first_of("0123456789") == std::string::npos || text_date_field.find_first_of("-") == std::string::npos)
+    {
+        wxLogError("[-] Invalid date format");
+        return;
+    }
+    std::string target_char = "-";
+    int count = 0;
+    std::string::size_type i = text_date_field.find(target_char);
+    while (i != std::string::npos)
+    {
+        count++;
+        i = text_date_field.find(target_char, i + target_char.length());
+    }
+    if (count != 2)
+    {
+        wxLogError((std::to_string(count)).c_str());
+        wxLogError(("[-] Invalid date format - Hyphen Mismatch: " + std::to_string(count)).c_str());
+        return;
+    }
+    count = 0;
+    for (auto i : text_date_field)
+    {
+        if (isdigit(i))
+        {
+            count++;
+        }
+    }
+    if (count != 8)
+    {
+        wxLogError((std::to_string(count)).c_str());
+        wxLogError(("[-] Invalid date format - Date Mismatch: " + std::to_string(count)).c_str());
+        return;
+    }
+
+    std::string special_characters = "\\/:*?\"<>|";
+    for (int i = 0; i <= special_characters.length(); i++)
+    {
+        if (category_label.find(special_characters[i]) != std::string::npos)
+        {
+            wxLogError("[-] A special character detected");
+            return;
+        }
+    }
+
+    /*
+    //Date validator
+    if (text_date_field[4] == '-' && text_date_field[7] == '-')
+    {
+        for (int i = 0; i <= text_date_field.size(); i++)
+        {
+            if (i != 4 || i != 7)
+            {
+                if (!isdigit(text_date_field[i]))
+                {
+                    wxLogError("[-] Invalid input - Non-digital detected");
+                    wxLogError("" + text_date_field[i]);
+                    break;
+                }
+            }
+        }
+        "YYYY-mm-dd";
+        wxLogError("[-] Invalid input - Invalid Date");
+        return;
+    }
+    
+    else
+    {
+        wxLogError("[-] Invalid input - Invalid Date");
+        return;
+    }
+    */
+
+    text_record_field.erase(std::remove(text_record_field.begin(), text_record_field.end(), '\n'), text_record_field.end()); // Removing new lines from inputted text.
+    if (category_label == "_Bookmark_record") // Inserting records into _Bookmark_record does not pass user_defined date | Not a bug.
+    {
+        if (text_record_field.find_first_not_of("0123456789") != std::string::npos || text_record_field.empty()) // Note: Fails to validate very large numbers (Above 2147483647 to be exact).
+        {
+            wxLogError("[-] Invalid input - Please try again");
+            return;
+        }
+        if (text_record_field.length() >= 10)
+        {
+            wxLogError("[-] Large number");
+            return;
+        }
+        bookmark_counter_main(std::stoi(text_record_field));
+    }
+    else if (category_label == "_Exercise")
+    {
+        if (text_record_field.find_first_not_of("0123456789") != std::string::npos || text_record_field.empty())
+        {
+            wxLogError("[-] Invalid input - Please try again");
+            return;
+        }
+        csv_maintainer_main("_Exercise.csv", text_date_field, text_record_field);
+    }
+    else
+    {
+        csv_maintainer_main(category_label + ".csv", text_date_field, text_record_field);
+    }
+    //Main_Frame::UpdateStatusBar(std::filesystem::current_path().generic_string() + "/" + "_Tracking_Centraliser_Root_Folder" + "/" + category_label + ".csv"); #Latest update to file.
+    Main_Frame::UpdateStatusBar("[+] " + category_label + ".csv" + " | " + text_date_field  + " | " + text_record_field);
+    wxLogMessage("[+] Inserted: [" + text_date_field + "] " + text_record_field + " to " + category_combo_box->GetValue() + ".csv");
+    
+    update_category_item_arr();
+    category_combo_box->Set(category_item_arr);
+    category_combo_box->SetValue(category_label);
+}
+
+void Main_Frame::update_category_item_arr()
+{
+    /*
+    // OLD Method of adding filenames to application from text file.
+    std::ifstream input_file;
+    std::string input_file_line;
+    input_file.open("_Tracking_Centraliser_Category_List.txt");
+    while (std::getline(input_file, input_file_line))
+    {
+        category_item_arr.Add(input_file_line);
+    }
+    input_file.close();
+    */
+
+    category_item_arr.Clear();
+    std::string path = std::filesystem::current_path().generic_string() + "/_Tracking_Centraliser_Root_Folder/";
+    for (const auto& entry : std::filesystem::directory_iterator(path))
+    {
+        if (entry.path().generic_string().find(".csv") != std::string::npos)
+        {
+            std::string sub_filename = (entry.path().generic_string().substr(entry.path().generic_string().find_last_of("//") + 1)).c_str();
+            sub_filename = sub_filename.substr(0, sub_filename.find_last_of(".csv") - 3);
+            category_item_arr.Add(sub_filename);
+        }
+    }
 }
 
 void debugging_function(std::string category_label, std::string delta, std::string text_record_field)
@@ -262,268 +414,6 @@ void debugging_function(std::string category_label, std::string delta, std::stri
     wxLogError(std::to_string(tmp_string[7]).c_str());
     */
 }
-
-void Main_Frame::OnInsert(wxCommandEvent& event)
-{
-    //debugging_function(category_combo_box->GetValue().ToStdString(), text_date_field->GetValue().ToStdString(), text_record_field->GetValue().ToStdString());
-    //category_label->SetLabel("new value"); Example to change label.
-    insert_to_csv(category_combo_box->GetValue().ToStdString(), text_date_field->GetValue().ToStdString(), text_record_field->GetValue().ToStdString());
-}
-
-void Main_Frame::insert_to_csv(std::string category_label, std::string text_date_field, std::string text_record_field)
-{
-    /* TO_DO:
-    - Date validation - User can insert any number (And characters) into "Current_Date" field.
-    - Text file creation name validation.
-    */
-
-    if (category_label.empty() || text_date_field.empty() || text_record_field.empty())
-    {
-        wxLogError("[-] Invalid input - Empty Field");
-        return;
-    }
-
-    if (text_date_field.find_first_of("0123456789") == std::string::npos || text_date_field.find_first_of("-") == std::string::npos)
-    {
-        wxLogError("[-] Invalid date format");
-        return;
-    }
-    std::string target_char = "-";
-    int count = 0;
-    std::string::size_type i = text_date_field.find(target_char);
-    while (i != std::string::npos)
-    {
-        count++;
-        i = text_date_field.find(target_char, i + target_char.length());
-    }
-    if (count != 2)
-    {
-        wxLogError((std::to_string(count)).c_str());
-        wxLogError(("[-] Invalid date format - Hyphen Mismatch: " + std::to_string(count)).c_str());
-        return;
-    }
-    count = 0;
-    for (auto i : text_date_field)
-    {
-        if (isdigit(i))
-        {
-            count++;
-        }
-    }
-    if (count != 8)
-    {
-        wxLogError((std::to_string(count)).c_str());
-        wxLogError(("[-] Invalid date format - Date Mismatch: " + std::to_string(count)).c_str());
-        return;
-    }
-
-    std::string special_characters = "\\/:*?\"<>|";
-    for (int i = 0; i <= special_characters.length(); i++)
-    {
-        if (category_label.find(special_characters[i]) != std::string::npos)
-        {
-            wxLogError("[-] A special character detected");
-            return;
-        }
-    }
-
-    /*
-    //Date validator
-    if (text_date_field[4] == '-' && text_date_field[7] == '-')
-    {
-        for (int i = 0; i <= text_date_field.size(); i++)
-        {
-            if (i != 4 || i != 7)
-            {
-                if (!isdigit(text_date_field[i]))
-                {
-                    wxLogError("[-] Invalid input - Non-digital detected");
-                    wxLogError("" + text_date_field[i]);
-                    break;
-                }
-            }
-        }
-        "YYYY-mm-dd";
-        wxLogError("[-] Invalid input - Invalid Date");
-        return;
-    }
-    
-    else
-    {
-        wxLogError("[-] Invalid input - Invalid Date");
-        return;
-    }
-    */
-
-    text_record_field.erase(std::remove(text_record_field.begin(), text_record_field.end(), '\n'), text_record_field.end()); // Removing new lines from inputted text.
-    // [TO_DO] _Bookmark_record selection broken 
-    if (category_label == "_Bookmark_record") // Inserting records into _Bookmark_record does not pass user_defined date.
-    {
-        if (text_record_field.find_first_not_of("0123456789") != std::string::npos || text_record_field.empty()) // Note: Fails to validate very large numbers (Above 2147483647 to be exact).
-        {
-            wxLogError("[-] Invalid input - Please try again");
-            return;
-        }
-        if (text_record_field.length() >= 10)
-        {
-            wxLogError("[-] Large number");
-            return;
-        }
-        bookmark_counter_main(std::stoi(text_record_field));
-    }
-    else if (category_label == "_Exercise")
-    {
-        if (text_record_field.find_first_not_of("0123456789") != std::string::npos || text_record_field.empty())
-        {
-            wxLogError("[-] Invalid input - Please try again");
-            return;
-        }
-        csv_maintainer_main("_Exercise.csv", text_date_field, text_record_field);
-    }
-    else
-    {
-        csv_maintainer_main(category_label + ".csv", text_date_field, text_record_field);
-    }
-    //Main_Frame::UpdateStatusBar(std::filesystem::current_path().generic_string() + "/" + "_Tracking_Centraliser_Root_Folder" + "/" + category_label + ".csv"); #Latest update to file.
-    Main_Frame::UpdateStatusBar("[+] " + category_label + ".csv" + " | " + text_date_field  + " | " + text_record_field);
-    wxLogMessage("[+] Inserted: [" + text_date_field + "] " + text_record_field + " to " + category_combo_box->GetValue() + ".csv");
-    
-    update_category_item_arr();
-    category_combo_box->Set(category_item_arr);
-    category_combo_box->SetValue(category_label);
-}
-
-void Main_Frame::update_category_item_arr()
-{
-    /*
-    // OLD Method of adding filenames to application from text file.
-    std::ifstream input_file;
-    std::string input_file_line;
-    input_file.open("_Tracking_Centraliser_Category_List.txt");
-    while (std::getline(input_file, input_file_line))
-    {
-        category_item_arr.Add(input_file_line);
-    }
-    input_file.close();
-    */
-
-    category_item_arr.Clear();
-    std::string path = std::filesystem::current_path().generic_string() + "/_Tracking_Centraliser_Root_Folder/";
-    for (const auto& entry : std::filesystem::directory_iterator(path))
-    {
-        if (entry.path().generic_string().find(".csv") != std::string::npos)
-        {
-            std::string sub_filename = (entry.path().generic_string().substr(entry.path().generic_string().find_last_of("//") + 1)).c_str();
-            sub_filename = sub_filename.substr(0, sub_filename.find_last_of(".csv") - 3);
-            category_item_arr.Add(sub_filename);
-        }
-    }
-}
-
-/*
-int main()
-{
-    std::cout << "=======================================" << "\n";
-    std::cout << "- Tracker_Centralisation GUI application" << "\n";
-    std::cout << "- GUI Application Version: 1.0" << "\n";
-    std::cout << "- Created By: Anthony-T-N." << "\n";
-    std::cout << "- Current location of executable: " << std::filesystem::current_path() << "\n";
-    std::cout << "=======================================" << "\n\n";
-
-    std::string user_input;
-
-    std::cout << get_current_date() << "\n";
-    std::cout << "Input: " << "\n";
-    std::cout << "> ";
-    std::getline(std::cin, user_input);
-
-    std::cout << "[!] END" << "\n";
-    std::cout << "[!] Exiting..." << "\n\n";
-    return 0;
-}
-*/
-
-/*
-Main_Frame::Main_Frame()
-    : wxFrame(NULL, wxID_ANY, "Window_Title_Bar")
-{
-    HelloWorld = new wxButton(this, BUTTON_Hello, _T("Hello World"),
-        // shows a button on this window
-        wxDefaultPosition, wxDefaultSize, wxBU_LEFT); // with the text "hello World"
-
-    wxMenu* menuFile = new wxMenu;
-    menuFile->Append(ID_Hello, "&Main_Item...\tCtrl-H",
-        "String shown in bottom status bar");
-    menuFile->AppendSeparator();
-    menuFile->Append(wxID_EXIT);
-
-    wxMenu* menuExercise = new wxMenu;
-    menuExercise->Append(wxID_ABOUT);
-
-    wxMenu* menuFile_T = new wxMenu;
-    menuFile_T->Append(ID_Media, "&Time_Record\tCtrl-H",
-        "Bar: Record time");
-
-    wxMenu* menu_bookmark = new wxMenu;
-    menu_bookmark->Append(ID_Bookmark, "&Bookmark\tCtrl-H",
-        "Bar: Bookmark");
-
-    wxMenuBar* menuBar = new wxMenuBar;
-    menuBar->Append(menuFile, "&Tab_1");
-    menuBar->Append(menuExercise, "&Exercise");
-    menuBar->Append(menuFile_T, "&Media");
-    menuBar->Append(menu_bookmark, "&Bookmark");
-
-    SetMenuBar(menuBar);
-
-    CreateStatusBar();
-    // "Bottom_Status_Bar"
-    SetStatusText(get_current_date());
-
-    MainEditBox = new wxTextCtrl(this, TEXT_Main,
-        wxT("Enter text here..."), wxDefaultPosition, wxDefaultSize,
-        wxTE_MULTILINE | wxTE_RICH, wxDefaultValidator, wxTextCtrlNameStr);
-
-    // Maximises window.
-    //Maximize();
-
-    Bind(wxEVT_MENU, &Main_Frame::OnHello, this, ID_Hello);
-    Bind(wxEVT_MENU, &Main_Frame::OnMedia, this, ID_Media);
-    Bind(wxEVT_MENU, &Main_Frame::OnExercise, this, wxID_ABOUT);
-    Bind(wxEVT_MENU, &Main_Frame::OnExit, this, wxID_EXIT);
-    Bind(wxEVT_MENU, &Main_Frame::OnBookmark, this, ID_Bookmark);
-}
-
-void Main_Frame::OnExercise(wxCommandEvent& event)
-{
-    wxMessageBox("This is the Exercise tab",
-        "Exercise Tab", wxOK | wxICON_INFORMATION);
-}
-
-void Main_Frame::OnMedia(wxCommandEvent& event)
-{
-    //wxMessageBox(get_current_date());
-    wxMessageDialog* dial = new wxMessageDialog(NULL,
-        wxT("Message here"), wxT("Info"), wxOK);
-    dial->ShowModal();
-}
-
-void Main_Frame::OnBookmark(wxCommandEvent& event)
-{
-    wxMessageBox("This is the Bookmark tab",
-        "Bookmark Tab", wxOK | wxICON_INFORMATION);
-}
-
-void Main_Frame::OnHello(wxCommandEvent& event)
-{
-    wxLogMessage("Tab_1 Window Message");
-}
-
-void Main_Frame::OnExit(wxCommandEvent& event)
-{
-    Close(true);
-}
-*/
 
 /*
 Project Plan and Design
