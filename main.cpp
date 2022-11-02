@@ -162,7 +162,6 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_date
 {
     /* TO_DO:
     - Date validation - User can insert any number (And characters) into "Current_Date" field.
-    - Text file creation name validation.
     */
 
     if (category_label.empty() || text_date_field.empty() || text_record_field.empty())
@@ -176,6 +175,7 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_date
         wxLogError("[-] Invalid date format");
         return;
     }
+
     std::string target_char = "-";
     int count = 0;
     std::string::size_type i = text_date_field.find(target_char);
@@ -184,12 +184,14 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_date
         count++;
         i = text_date_field.find(target_char, i + target_char.length());
     }
+
     if (count != 2)
     {
         wxLogError((std::to_string(count)).c_str());
         wxLogError(("[-] Invalid date format - Hyphen Mismatch: " + std::to_string(count)).c_str());
         return;
     }
+
     count = 0;
     for (auto i : text_date_field)
     {
@@ -251,6 +253,7 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_date
             wxLogError("[-] Invalid input - Please try again");
             return;
         }
+
         if (text_record_field.length() >= 10)
         {
             wxLogError("[-] Large number");
@@ -271,6 +274,7 @@ void Main_Frame::insert_to_csv(std::string category_label, std::string text_date
     {
         csv_maintainer_main(category_label + ".csv", text_date_field, text_record_field);
     }
+
     //Main_Frame::UpdateStatusBar(std::filesystem::current_path().generic_string() + "/" + "_Tracking_Centraliser_Root_Folder" + "/" + category_label + ".csv"); #Latest update to file.
     Main_Frame::UpdateStatusBar("[+] " + category_label + ".csv" + " | " + text_date_field  + " | " + text_record_field);
     wxLogMessage("[+] Inserted: [" + text_date_field + "] " + text_record_field + " to " + category_combo_box->GetValue() + ".csv");
