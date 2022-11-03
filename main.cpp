@@ -57,14 +57,9 @@ class Main_Frame : public wxFrame
 
 enum
 {
-    ID_Hello = 1,
-    TEXT_Main = wxID_HIGHEST + 2,
-    BUTTON_Insert = wxID_HIGHEST + 3,
-    BUTTON_Undo = wxID_HIGHEST + 4
+    BUTTON_Insert = wxID_HIGHEST + 1,
 };
 
-const int ID_Media = 2;
-const int ID_Bookmark = 3;
 const int ID_COMBOBOX1 = 4;
 
 wxStaticText* category_label;
