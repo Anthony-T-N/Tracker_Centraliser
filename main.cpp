@@ -50,7 +50,7 @@ class Main_Frame : public wxFrame
         wxTextCtrl* MainEditBox;
 
     private:
-        void OnInsert(wxCommandEvent& event);
+        void on_insert(wxCommandEvent& event);
         void insert_to_csv(std::string category_label, std::string text_date_field, std::string text_record_field);
         void update_category_item_arr();
 };
@@ -126,7 +126,7 @@ Main_Frame::Main_Frame()
     fgs->Add(review_label, 1, wxEXPAND);
     fgs->Add(insert_button);
 
-    Bind(wxEVT_BUTTON, &Main_Frame::OnInsert, this, BUTTON_Insert);
+    Bind(wxEVT_BUTTON, &Main_Frame::on_insert, this, BUTTON_Insert);
 
     fgs->AddGrowableRow(2, 1);
     fgs->AddGrowableCol(1, 1);
@@ -146,7 +146,7 @@ void Main_Frame::UpdateStatusBar(wxString message)
     status_text_bar->SetStatusText(message, 0); //text in field 0
 }
 
-void Main_Frame::OnInsert(wxCommandEvent& event)
+void Main_Frame::on_insert(wxCommandEvent& event)
 {
     //debugging_function(category_combo_box->GetValue().ToStdString(), text_date_field->GetValue().ToStdString(), text_record_field->GetValue().ToStdString());
     //category_label->SetLabel("new value"); Example to change label.
