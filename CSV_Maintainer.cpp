@@ -132,7 +132,7 @@ void sort_record_dates(std::string csv_file_name)
     }
     else
     {
-        wxLogMessage(("[!] Line count " + std::to_string(sorted_line_count)).c_str());
+        wxLogMessage(("[!] Line count: " + std::to_string(sorted_line_count)).c_str());
     }
     input_file.close();
     output_temp_file.close();
@@ -152,12 +152,12 @@ void sort_record_dates(std::string csv_file_name)
     if (!value)
     {
         wxLogMessage("[+] Filename renamed successfully");
-        wxLogMessage(("[!] temp_record.csv > " + csv_file_name).c_str());
+        wxLogMessage(("[!] temp_record.csv renamed to " + csv_file_name).c_str());
     }
     else
     {
         wxLogError("[-] Error with filename change");
-        wxLogError(("[!] temp_record.csv > " + csv_file_name).c_str());
+        wxLogError(("[!] temp_record.csv renamed to " + csv_file_name).c_str());
     }
 }
 
