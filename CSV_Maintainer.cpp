@@ -7,7 +7,6 @@
 
 void root_folder_creation(std::string root_folder_name, std::string csv_file_name)
 {
-    // Detect duplicate root folders ?
     if (std::filesystem::exists(root_folder_name) == false)
     {
         wxLogMessage("[-] _Tracking_Centraliser_Root_Folder does not exist;");
@@ -191,19 +190,3 @@ int csv_maintainer_main(std::string csv_file_name, std::string date, std::string
     }
     return 0;
 }
-
-// Create file -> Get date -> Add event/item -> Close
-
-/*
-   Date | Series Name
-   Date | Events
-   Date | URLS
-
-   Directory Tree:
-   .exe
-   -> _Tracking_Centraliser_Root_Folder
-            -> file1.csv
-            -> file2.csv
-            -> file3.csv
-                    -> _Backup_Record_Folder
-*/
