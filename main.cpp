@@ -75,10 +75,10 @@ bool Main_Application::OnInit()
     // Create an instance of frame or window
     //Main_Frame* frame = new Main_Frame();
     // Show the window
-    //fgs->HasFlag(wxSTAY_ON_TOP);
-    //fgs->SetWindowStyleFlag(fgs->GetWindowStyleFlag() & ~wxSTAY_ON_TOP);
     fgs->SetWindowStyleFlag(fgs->GetWindowStyleFlag() | wxSTAY_ON_TOP);
     fgs->Show(true);
+
+    fgs->SetIcon(wxIcon(wxT("1497558526-12_84950.ico"), wxBITMAP_TYPE_ICO));
 
     return true;
 }
