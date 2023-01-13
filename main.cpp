@@ -53,11 +53,13 @@ class Main_Frame : public wxFrame
         void on_insert(wxCommandEvent& event);
         void insert_to_csv(std::string category_label, std::string text_date_field, std::string text_record_field);
         void update_category_item_arr();
+        void on_clear(wxCommandEvent& event);
 };
 
 enum
 {
     BUTTON_Insert = wxID_HIGHEST + 1,
+    BUTTON_Clear = wxID_HIGHEST + 2,
 };
 
 const int ID_COMBOBOX1 = 4;
@@ -109,6 +111,9 @@ Main_Frame::Main_Frame()
     wxStaticText* review_label = new wxStaticText(panel, -1, wxT("Review:"));
     review_label->SetForegroundColour(wxColour(255, 255, 255));
 
+    wxStaticText* rW_label = new wxStaticText(panel, -1, wxT("rw_label:"));
+    review_label->SetForegroundColour(wxColour(255, 255, 255));
+
     text_date_field = new wxTextCtrl(panel, -1, get_current_date());
     category_combo_box = new wxComboBox(panel, ID_COMBOBOX1, wxEmptyString, wxDefaultPosition, wxDefaultSize, category_item_arr, wxCB_DROPDOWN, wxDefaultValidator, _T("ID_COMBOBOX1"));
     text_record_field = new wxTextCtrl(panel, -1, wxT(""),
@@ -117,16 +122,23 @@ Main_Frame::Main_Frame()
     wxButton* insert_button = new wxButton(panel, BUTTON_Insert, _T("INSERT"),
         wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_VERTICAL);
 
+    wxButton* clear_button = new wxButton(panel, BUTTON_Clear, _T("CLEAR"),
+        wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_VERTICAL);
+
     fgs->Add(date_label);
     fgs->Add(text_date_field, 1, wxEXPAND);
     fgs->Add(category_label);
     fgs->Add(category_combo_box, 1, wxEXPAND);
     fgs->Add(record_label);
     fgs->Add(text_record_field, 1, wxEXPAND);
+    fgs->Add(rW_label);
+    fgs->Add(clear_button);
     fgs->Add(review_label, 1, wxEXPAND);
     fgs->Add(insert_button);
 
     Bind(wxEVT_BUTTON, &Main_Frame::on_insert, this, BUTTON_Insert);
+
+    Bind(wxEVT_BUTTON, &Main_Frame::on_clear, this, BUTTON_Clear);
 
     fgs->AddGrowableRow(2, 1);
     fgs->AddGrowableCol(1, 1);
@@ -151,6 +163,11 @@ void Main_Frame::on_insert(wxCommandEvent& event)
     //debugging_function(category_combo_box->GetValue().ToStdString(), text_date_field->GetValue().ToStdString(), text_record_field->GetValue().ToStdString());
     //category_label->SetLabel("new value"); Example to change label.
     insert_to_csv(category_combo_box->GetValue().ToStdString(), text_date_field->GetValue().ToStdString(), text_record_field->GetValue().ToStdString());
+}
+
+void Main_Frame::on_clear(wxCommandEvent& event)
+{
+    text_record_field->Clear();
 }
 
 void Main_Frame::insert_to_csv(std::string category_label, std::string text_date_field, std::string text_record_field)
