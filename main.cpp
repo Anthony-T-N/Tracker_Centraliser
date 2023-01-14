@@ -111,8 +111,8 @@ Main_Frame::Main_Frame()
     wxStaticText* review_label = new wxStaticText(panel, -1, wxT("Review:"));
     review_label->SetForegroundColour(wxColour(255, 255, 255));
 
-    wxStaticText* rW_label = new wxStaticText(panel, -1, wxT("rw_label:"));
-    review_label->SetForegroundColour(wxColour(255, 255, 255));
+    wxStaticText* rW_label = new wxStaticText(panel, -1, wxT("Placeholder_Label: [X]"));
+    rW_label->SetForegroundColour(wxColour(255, 255, 255));
 
     text_date_field = new wxTextCtrl(panel, -1, get_current_date());
     category_combo_box = new wxComboBox(panel, ID_COMBOBOX1, wxEmptyString, wxDefaultPosition, wxDefaultSize, category_item_arr, wxCB_DROPDOWN, wxDefaultValidator, _T("ID_COMBOBOX1"));
